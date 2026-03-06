@@ -1,0 +1,1731 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RobloxForge PRO v2</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Syne:wght@600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0b0b0e;--s1:#111116;--s2:#17171e;--s3:#1e1e28;--s4:#252530;
+  --b1:#2a2a38;--b2:#383848;--b3:#4a4a62;
+  --acc:#7c6bff;--acc2:#a594ff;--acc3:#c4baff;
+  --green:#00e5a0;--red:#ff4d6d;--yellow:#ffd23f;--orange:#ff6b35;--cyan:#00d4ff;
+  --txt:#eeeef8;--txt2:#9898b8;--txt3:#55556a;--txt4:#333345;
+  --glow:rgba(124,107,255,0.12);--glow2:rgba(124,107,255,0.25);
+  --sh:0 12px 40px rgba(0,0,0,0.7);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;overflow:hidden;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);font-size:13px;display:flex;flex-direction:column;}
+
+/* ── TOPBAR ── */
+#topbar{height:46px;background:var(--s1);border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:4px;padding:0 10px;flex-shrink:0;z-index:200;}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:15px;color:var(--acc2);letter-spacing:-0.5px;padding:0 8px;white-space:nowrap;}
+.logo em{color:var(--green);font-style:normal;}
+.logo span{font-size:9px;background:var(--acc);color:white;border-radius:3px;padding:1px 4px;margin-left:4px;vertical-align:middle;font-weight:700;}
+.tsep{width:1px;height:22px;background:var(--b1);margin:0 3px;}
+.tbtn{display:flex;align-items:center;gap:5px;padding:5px 9px;border-radius:6px;background:none;border:none;color:var(--txt3);cursor:pointer;font-size:11.5px;font-family:'DM Sans',sans-serif;transition:all .15s;white-space:nowrap;}
+.tbtn:hover{background:var(--s3);color:var(--txt);}
+.tbtn.act{background:var(--glow);color:var(--acc2);}
+.tbtn svg{width:13px;height:13px;flex-shrink:0;}
+.tbtn .badge{font-size:9px;background:var(--red);color:#fff;border-radius:99px;padding:1px 5px;margin-left:2px;}
+#tspace{flex:1;}
+.ver-badge{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--txt3);padding:3px 8px;background:var(--s3);border-radius:5px;}
+
+/* ── MAIN ── */
+#main{flex:1;display:flex;overflow:hidden;}
+
+/* ── LEFT PANEL ── */
+#lp{width:224px;background:var(--s1);border-right:1px solid var(--b1);display:flex;flex-direction:column;flex-shrink:0;}
+.ptabs{display:flex;border-bottom:1px solid var(--b1);flex-shrink:0;}
+.ptab{flex:1;padding:8px 4px;text-align:center;font-size:10px;font-weight:700;color:var(--txt3);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;letter-spacing:.6px;text-transform:uppercase;}
+.ptab.on{color:var(--acc2);border-bottom-color:var(--acc);}
+.ptab:hover:not(.on){color:var(--txt2);}
+.lpanel{flex:1;overflow-y:auto;padding:8px;}
+.lpanel.hide{display:none;}
+
+/* Elements grid */
+.sec-lbl{font-size:9.5px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;padding:10px 4px 5px;display:flex;align-items:center;gap:5px;}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--b1);}
+.eg{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:4px;}
+.eb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:9px 5px;background:var(--s3);border:1px solid var(--b1);border-radius:7px;cursor:pointer;color:var(--txt3);font-size:9.5px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;transition:all .15s;user-select:none;}
+.eb:hover{background:var(--s2);border-color:var(--acc);color:var(--acc2);transform:translateY(-1px);}
+.eb:active{transform:translateY(0);}
+.eb svg{width:17px;height:17px;}
+.eb.wide{grid-column:span 2;}
+
+/* Explorer */
+#explorer{flex:1;overflow-y:auto;}
+.ex-item{display:flex;align-items:center;gap:5px;padding:5px 6px;border-radius:5px;cursor:pointer;color:var(--txt3);font-size:11.5px;transition:all .1s;border:1px solid transparent;margin-bottom:2px;user-select:none;}
+.ex-item:hover{background:var(--s3);color:var(--txt2);}
+.ex-item.sel{background:var(--glow);border-color:var(--acc);color:var(--acc2);}
+.ex-item .ico{font-size:12px;flex-shrink:0;width:16px;text-align:center;}
+.ex-item .nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.ex-item .zi{font-size:9px;color:var(--txt3);font-family:'JetBrains Mono',monospace;}
+.ex-vis{background:none;border:none;color:var(--txt3);cursor:pointer;padding:2px;border-radius:3px;display:flex;align-items:center;}
+.ex-vis:hover{color:var(--txt);background:var(--b1);}
+.ex-vis svg{width:11px;height:11px;}
+.ex-lock{background:none;border:none;color:var(--txt3);cursor:pointer;padding:2px;border-radius:3px;}
+.ex-lock:hover{color:var(--yellow);}
+.ex-lock svg{width:11px;height:11px;}
+
+/* Presets */
+.pg{display:grid;grid-template-columns:1fr 1fr;gap:5px;}
+.pb{padding:7px 6px;background:var(--s3);border:1px solid var(--b1);border-radius:7px;cursor:pointer;color:var(--txt2);font-size:10.5px;font-weight:600;text-align:center;transition:all .15s;display:flex;align-items:center;gap:5px;justify-content:center;}
+.pb:hover{border-color:var(--acc);color:var(--acc2);background:var(--glow);}
+.pb:active{transform:scale(.97);}
+.pdot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+
+/* ── CANVAS AREA ── */
+#ca{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+
+/* Toolbar strip */
+#ts{display:flex;align-items:center;gap:2px;padding:4px 8px;background:var(--s2);border-bottom:1px solid var(--b1);flex-shrink:0;overflow-x:auto;}
+#ts::-webkit-scrollbar{height:0;}
+.ttbtn{display:flex;align-items:center;justify-content:center;gap:4px;padding:4px 8px;background:none;border:1px solid transparent;border-radius:5px;color:var(--txt3);cursor:pointer;font-size:11px;font-family:'DM Sans',sans-serif;transition:all .12s;white-space:nowrap;}
+.ttbtn:hover{background:var(--s3);color:var(--txt);border-color:var(--b1);}
+.ttbtn.on{background:var(--glow);color:var(--acc2);border-color:var(--acc);}
+.ttbtn svg{width:13px;height:13px;}
+.ttsep{width:1px;height:18px;background:var(--b1);margin:0 2px;flex-shrink:0;}
+.zdsp{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--txt3);min-width:44px;text-align:center;}
+
+/* Canvas wrap */
+#cw{flex:1;overflow:hidden;position:relative;background:var(--bg);
+  background-image:radial-gradient(circle,var(--b1) 1px,transparent 1px);
+  background-size:24px 24px;}
+#cw.pan-mode{cursor:grab;}
+#cw.pan-mode:active{cursor:grabbing;}
+#cvs{position:absolute;transform-origin:top left;}
+
+/* Screen */
+.rbx-screen{position:relative;overflow:hidden;
+  box-shadow:0 0 0 1px var(--b2),0 0 80px rgba(0,0,0,.9);}
+.screen-lbl{position:absolute;top:-20px;left:0;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--txt3);}
+
+/* GUI element */
+.gel{position:absolute;cursor:move;user-select:none;display:flex;align-items:center;justify-content:center;min-width:4px;min-height:4px;}
+.gel .outline{display:none;pointer-events:none;position:absolute;inset:-2px;border:2px solid var(--acc);border-radius:inherit;}
+.gel .outline::after{content:'';position:absolute;inset:-4px;border:1px dashed rgba(124,107,255,.35);border-radius:inherit;}
+.gel.sel .outline{display:block;}
+.gel.locked{cursor:not-allowed;}
+.gel .el-inner{width:100%;height:100%;display:flex;align-items:center;justify-content:center;border-radius:inherit;overflow:hidden;pointer-events:none;}
+
+/* 8-point handles */
+.hndl{position:absolute;width:9px;height:9px;background:#fff;border:2px solid var(--acc);border-radius:2px;pointer-events:all;z-index:20;display:none;}
+.gel.sel .hndl{display:block;}
+.hndl.nw{top:-5px;left:-5px;cursor:nw-resize;}
+.hndl.n{top:-5px;left:calc(50% - 4px);cursor:n-resize;}
+.hndl.ne{top:-5px;right:-5px;cursor:ne-resize;}
+.hndl.w{top:calc(50% - 4px);left:-5px;cursor:w-resize;}
+.hndl.e{top:calc(50% - 4px);right:-5px;cursor:e-resize;}
+.hndl.sw{bottom:-5px;left:-5px;cursor:sw-resize;}
+.hndl.s{bottom:-5px;left:calc(50% - 4px);cursor:s-resize;}
+.hndl.se{bottom:-5px;right:-5px;cursor:se-resize;}
+
+/* Snap guides */
+.snap-guide{position:absolute;pointer-events:none;z-index:950;}
+.snap-guide.h{height:1px;left:0;right:0;background:rgba(0,229,160,.8);}
+.snap-guide.v{width:1px;top:0;bottom:0;background:rgba(0,229,160,.8);}
+
+/* Selection box */
+#selbox{position:absolute;border:1px solid var(--acc);background:rgba(124,107,255,.07);pointer-events:none;z-index:900;display:none;}
+
+/* ── RIGHT PANEL ── */
+#rp{width:274px;background:var(--s1);border-left:1px solid var(--b1);display:flex;flex-direction:column;flex-shrink:0;}
+.rp-head{padding:9px 12px;border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.rp-head .icon{color:var(--acc);}
+.rp-head .icon svg{width:13px;height:13px;}
+#ptitle{font-weight:700;font-size:12.5px;flex:1;}
+.rp-tabs{display:flex;border-bottom:1px solid var(--b1);flex-shrink:0;}
+.rptab{flex:1;padding:6px 4px;text-align:center;font-size:9.5px;font-weight:700;color:var(--txt3);cursor:pointer;border-bottom:2px solid transparent;text-transform:uppercase;letter-spacing:.5px;transition:all .15s;}
+.rptab.on{color:var(--acc2);border-bottom-color:var(--acc);}
+#propscroll{flex:1;overflow-y:auto;padding:10px 11px;}
+.pg2{margin-bottom:11px;background:var(--s2);border:1px solid var(--b1);border-radius:8px;overflow:hidden;}
+.pgh{display:flex;align-items:center;gap:5px;padding:7px 9px;cursor:pointer;font-size:10px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.7px;background:var(--s3);border-bottom:1px solid var(--b1);user-select:none;}
+.pgh svg{width:11px;height:11px;flex-shrink:0;}
+.pgh .arr{margin-left:auto;transition:transform .2s;}
+.pgh.coll .arr{transform:rotate(-90deg);}
+.pgb{padding:9px 10px;}
+.pgb.hid{display:none;}
+.pr{display:flex;align-items:center;gap:7px;margin-bottom:7px;}
+.pr:last-child{margin-bottom:0;}
+.pl{font-size:10.5px;color:var(--txt3);width:75px;flex-shrink:0;line-height:1.3;}
+.pv{flex:1;}
+input[type=text],input[type=number],select,textarea{width:100%;background:var(--s4);border:1px solid var(--b2);color:var(--txt);padding:5px 7px;border-radius:5px;font-size:11.5px;font-family:'DM Sans',sans-serif;outline:none;transition:border .15s;}
+input:focus,select:focus,textarea:focus{border-color:var(--acc);}
+input[type=range]{width:100%;accent-color:var(--acc);background:none;border:none;padding:0;cursor:pointer;height:16px;}
+input[type=color]{width:30px;height:26px;padding:2px;cursor:pointer;border-radius:4px;background:var(--s4);border:1px solid var(--b2);}
+.crow{display:flex;gap:5px;align-items:center;}
+.crow input[type=text]{flex:1;}
+.di{display:grid;grid-template-columns:1fr 1fr;gap:4px;}
+.tog{width:34px;height:19px;background:var(--b1);border-radius:10px;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0;}
+.tog.on{background:var(--acc);}
+.tog::after{content:'';position:absolute;width:13px;height:13px;border-radius:50%;background:#fff;top:3px;left:3px;transition:transform .2s;}
+.tog.on::after{transform:translateX(15px);}
+.togrow{display:flex;align-items:center;gap:7px;}
+.togl{font-size:11px;color:var(--txt2);}
+.stpr{display:flex;align-items:center;}
+.stpr-btn{background:var(--s4);border:1px solid var(--b2);color:var(--txt2);cursor:pointer;width:22px;height:26px;font-size:13px;display:flex;align-items:center;justify-content:center;transition:all .1s;flex-shrink:0;}
+.stpr-btn:first-child{border-radius:5px 0 0 5px;border-right:none;}
+.stpr-btn:last-child{border-radius:0 5px 5px 0;border-left:none;}
+.stpr-btn:hover{background:var(--s3);color:var(--txt);}
+.stpr input{border-radius:0;text-align:center;flex:1;}
+.nosel{color:var(--txt3);font-size:11.5px;font-style:italic;text-align:center;padding:24px 10px;}
+
+/* ── BOTTOM: CODE + NODES ── */
+#bp{height:220px;background:var(--s1);border-top:1px solid var(--b1);display:flex;flex-direction:column;flex-shrink:0;}
+.btabs{display:flex;align-items:center;padding:0 10px;border-bottom:1px solid var(--b1);height:34px;gap:6px;flex-shrink:0;}
+.bttab{padding:3px 10px;background:none;border:none;color:var(--txt3);cursor:pointer;font-size:11.5px;font-weight:600;border-bottom:2px solid transparent;font-family:'DM Sans',sans-serif;transition:all .15s;}
+.bttab.on{color:var(--green);border-bottom-color:var(--green);}
+.btacts{margin-left:auto;display:flex;gap:5px;}
+.ba{padding:3px 9px;background:var(--s3);border:1px solid var(--b2);color:var(--txt2);border-radius:4px;cursor:pointer;font-size:10.5px;font-family:'DM Sans',sans-serif;transition:all .15s;}
+.ba:hover{color:var(--txt);}
+.ba.pri{background:var(--acc);border-color:var(--acc);color:#fff;}
+.ba.pri:hover{background:var(--acc2);}
+#lua-out{flex:1;width:100%;background:transparent;color:#7dffb3;border:none;resize:none;font-family:'JetBrains Mono',monospace;font-size:11px;padding:8px 14px;outline:none;line-height:1.65;}
+
+/* ── NODE EDITOR ── */
+#node-area{flex:1;position:relative;overflow:hidden;background:var(--bg);
+  background-image:radial-gradient(circle,var(--b1) 1px,transparent 1px);
+  background-size:20px 20px;display:none;}
+#node-svg{position:absolute;inset:0;pointer-events:none;}
+.node{position:absolute;background:var(--s2);border:1px solid var(--b2);border-radius:10px;min-width:160px;cursor:move;user-select:none;box-shadow:0 4px 20px rgba(0,0,0,.5);}
+.node.sel-node{border-color:var(--acc);box-shadow:0 0 0 2px var(--glow),0 4px 20px rgba(0,0,0,.5);}
+.node-head{padding:8px 12px;border-radius:9px 9px 0 0;font-size:11px;font-weight:700;display:flex;align-items:center;gap:6px;}
+.node-body{padding:8px 12px;font-size:10.5px;}
+.node-port{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
+.port-dot{width:10px;height:10px;border-radius:50%;border:2px solid currentColor;cursor:crosshair;flex-shrink:0;background:var(--bg);transition:background .15s;}
+.port-dot:hover,.port-dot.connected{background:currentColor;}
+.port-label{font-size:10px;color:var(--txt2);}
+.node-port.out{justify-content:flex-end;}
+.node-port.out .port-label{color:var(--txt2);}
+.del-node{background:none;border:none;color:var(--txt3);cursor:pointer;margin-left:auto;padding:2px;}
+.del-node:hover{color:var(--red);}
+.del-node svg{width:10px;height:10px;}
+
+/* ── STATUSBAR ── */
+#sb{height:21px;background:var(--s2);border-top:1px solid var(--b1);display:flex;align-items:center;gap:10px;padding:0 10px;flex-shrink:0;font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--txt3);}
+.sbsep{width:1px;height:11px;background:var(--b1);}
+
+/* ── MODALS ── */
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.75);display:none;align-items:center;justify-content:center;z-index:2000;backdrop-filter:blur(5px);}
+.ov.on{display:flex;}
+.mdl{background:var(--s1);border:1px solid var(--b2);border-radius:12px;padding:22px;min-width:340px;max-width:580px;box-shadow:var(--sh);animation:min 0.22s ease;}
+@keyframes min{from{opacity:0;transform:scale(.94) translateY(12px);}to{opacity:1;transform:scale(1) translateY(0);}}
+.mh{font-family:'Syne',sans-serif;font-size:15px;color:var(--txt);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.mx{margin-left:auto;background:none;border:none;color:var(--txt3);cursor:pointer;font-size:17px;line-height:1;}
+.mx:hover{color:var(--txt);}
+.mf{display:flex;gap:7px;justify-content:flex-end;margin-top:14px;}
+.btn-p{padding:7px 16px;background:var(--acc);border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:12.5px;font-family:'DM Sans',sans-serif;font-weight:600;transition:all .15s;}
+.btn-p:hover{background:var(--acc2);}
+.btn-s{padding:7px 16px;background:var(--s3);border:1px solid var(--b2);border-radius:6px;color:var(--txt2);cursor:pointer;font-size:12.5px;font-family:'DM Sans',sans-serif;transition:all .15s;}
+.btn-s:hover{color:var(--txt);}
+.btn-d{padding:7px 16px;background:rgba(255,77,109,.1);border:1px solid var(--red);border-radius:6px;color:var(--red);cursor:pointer;font-size:12.5px;font-family:'DM Sans',sans-serif;transition:all .15s;}
+.btn-d:hover{background:rgba(255,77,109,.2);}
+#scr-in{width:100%;height:200px;resize:none;font-family:'JetBrains Mono',monospace;font-size:11px;background:#07070d;color:#7dffb3;border:1px solid var(--b2);border-radius:7px;padding:10px;}
+.img-drop{border:2px dashed var(--b2);border-radius:8px;padding:20px;text-align:center;color:var(--txt3);cursor:pointer;font-size:11.5px;transition:all .15s;}
+.img-drop:hover{border-color:var(--acc);color:var(--txt2);}
+
+/* ── TOAST ── */
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--s3);border:1px solid var(--b2);color:var(--txt);padding:9px 16px;border-radius:7px;font-size:12.5px;z-index:3000;transition:transform .28s;box-shadow:var(--sh);white-space:nowrap;}
+#toast.on{transform:translateX(-50%) translateY(0);}
+#toast.ok{border-color:var(--green);}
+#toast.err{border-color:var(--red);}
+#toast.warn{border-color:var(--yellow);}
+
+/* ── TWEEN PANEL ── */
+.tween-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;}
+.tw-btn{padding:5px 4px;background:var(--s4);border:1px solid var(--b1);border-radius:5px;cursor:pointer;color:var(--txt3);font-size:9.5px;font-weight:600;text-align:center;transition:all .15s;}
+.tw-btn:hover{border-color:var(--acc);color:var(--acc2);}
+.tw-btn.on{background:var(--glow);border-color:var(--acc);color:var(--acc2);}
+
+/* ── GLOBAL VARS ── */
+.gv-row{display:flex;gap:5px;align-items:center;margin-bottom:5px;}
+.gv-del{background:none;border:none;color:var(--txt3);cursor:pointer;padding:3px;}
+.gv-del:hover{color:var(--red);}
+.gv-del svg{width:11px;height:11px;}
+
+/* ── SOUND LIBRARY ── */
+.snd-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px;}
+.snd-btn{padding:5px 6px;background:var(--s4);border:1px solid var(--b1);border-radius:5px;cursor:pointer;color:var(--txt3);font-size:10px;text-align:center;transition:all .15s;}
+.snd-btn:hover{border-color:var(--acc);color:var(--acc2);}
+
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-thumb{background:var(--b2);border-radius:99px;}
+::-webkit-scrollbar-track{background:transparent;}
+</style>
+</head>
+<body>
+
+<!-- ═══ TOPBAR ═══ -->
+<div id="topbar">
+  <div class="logo">Roblox<em>Forge</em><span>PRO</span></div>
+  <div class="tsep"></div>
+  <button class="tbtn" onclick="newProj()" title="New Ctrl+N">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>New
+  </button>
+  <button class="tbtn" onclick="saveProj()" title="Save Ctrl+S">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>Save
+  </button>
+  <button class="tbtn" onclick="loadProj()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>Load
+  </button>
+  <div class="tsep"></div>
+  <button class="tbtn" onclick="undo()" title="Ctrl+Z">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg>Undo
+  </button>
+  <button class="tbtn" onclick="redo()" title="Ctrl+Y">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3L21 13"/></svg>Redo
+  </button>
+  <div class="tsep"></div>
+  <button class="tbtn" onclick="dupeSel()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Duplicate
+  </button>
+  <button class="tbtn" onclick="grpSel()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-4 0v2"/></svg>Group
+  </button>
+  <div class="tsep"></div>
+  <button class="tbtn" onclick="openNodesPanel()" id="node-topbtn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="6" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="12" cy="18" r="2"/><path d="M7 6h10M6 8l6 8M18 8l-6 8"/></svg>Node Editor
+  </button>
+  <button class="tbtn" onclick="openGlobals()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>Globals
+  </button>
+  <div id="tspace"></div>
+  <button class="tbtn" onclick="exportLua()" style="background:var(--acc);color:#fff;border:none;">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Export .lua
+  </button>
+  <div class="ver-badge">v2.0</div>
+</div>
+
+<!-- ═══ MAIN ═══ -->
+<div id="main">
+
+<!-- LEFT PANEL -->
+<div id="lp">
+  <div class="ptabs">
+    <div class="ptab on" onclick="lTab('elements',this)">Elements</div>
+    <div class="ptab" onclick="lTab('layers',this)">Layers</div>
+    <div class="ptab" onclick="lTab('presets',this)">Styles</div>
+  </div>
+
+  <!-- ELEMENTS TAB -->
+  <div class="lpanel" id="lt-elements">
+    <div class="sec-lbl">Containers</div>
+    <div class="eg">
+      <div class="eb" onclick="addEl('Frame')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>Frame</div>
+      <div class="eb" onclick="addEl('ScrollFrame')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="19" y1="8" x2="21" y2="8"/><line x1="19" y1="12" x2="21" y2="12"/><line x1="19" y1="16" x2="21" y2="16"/></svg>Scroll</div>
+      <div class="eb" onclick="addEl('Viewport')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>Viewport</div>
+      <div class="eb" onclick="addEl('Canvas')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><rect x="7" y="7" width="10" height="10"/></svg>Canvas</div>
+    </div>
+    <div class="sec-lbl">Text</div>
+    <div class="eg">
+      <div class="eb" onclick="addEl('TextLabel')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>Label</div>
+      <div class="eb" onclick="addEl('TextButton')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="10" rx="5"/></svg>Button</div>
+      <div class="eb" onclick="addEl('TextBox')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><line x1="7" y1="10" x2="17" y2="10"/><line x1="7" y1="14" x2="11" y2="14"/><line x1="15" y1="14" x2="15" y2="14" stroke-linecap="round"/></svg>TextBox</div>
+      <div class="eb" onclick="addEl('Toggle')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="5" width="22" height="14" rx="7"/><circle cx="16" cy="12" r="3" fill="currentColor"/></svg>Toggle</div>
+    </div>
+    <div class="sec-lbl">Media</div>
+    <div class="eg">
+      <div class="eb" onclick="addEl('ImageLabel')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Image</div>
+      <div class="eb" onclick="addEl('ImageButton')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/><line x1="20" y1="20" x2="15" y2="15"/></svg>ImgBtn</div>
+    </div>
+    <div class="sec-lbl">Controls</div>
+    <div class="eg">
+      <div class="eb" onclick="addEl('Slider')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="12" x2="20" y2="12"/><circle cx="14" cy="12" r="3"/></svg>Slider</div>
+      <div class="eb" onclick="addEl('ProgressBar')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="10" width="20" height="4" rx="2"/><rect x="2" y="10" width="13" height="4" rx="2" fill="currentColor"/></svg>Progress</div>
+      <div class="eb" onclick="addEl('Dropdown')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="9" rx="2"/><polyline points="6 10 12 15 18 10"/></svg>Dropdown</div>
+      <div class="eb" onclick="addEl('Checkbox')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><polyline points="9 12 11 14 15 10"/></svg>Checkbox</div>
+      <div class="eb" onclick="addEl('RadioBtn')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4" fill="currentColor"/></svg>Radio</div>
+      <div class="eb" onclick="addEl('Badge')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>Badge</div>
+      <div class="eb" onclick="addEl('Separator')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="2" y1="12" x2="22" y2="12"/><line x1="5" y1="9" x2="5" y2="15"/><line x1="19" y1="9" x2="19" y2="15"/></svg>Separator</div>
+      <div class="eb" onclick="addEl('Tooltip')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="9" width="14" height="10" rx="2"/><path d="M8 19v3l4-3"/></svg>Tooltip</div>
+      <div class="eb wide" onclick="addEl('Notification')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Notification Bar</div>
+    </div>
+  </div>
+
+  <!-- LAYERS TAB -->
+  <div class="lpanel hide" id="lt-layers">
+    <div id="explorer"></div>
+  </div>
+
+  <!-- PRESETS TAB -->
+  <div class="lpanel hide" id="lt-presets">
+    <div class="sec-lbl">Style Presets</div>
+    <div class="pg" id="preset-list"></div>
+  </div>
+</div>
+
+<!-- CANVAS AREA -->
+<div id="ca">
+  <!-- Toolbar strip -->
+  <div id="ts">
+    <button class="ttbtn on" id="tb-sel" onclick="setTool('sel')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3l14 9-7 1-4 7z"/></svg>Select
+    </button>
+    <button class="ttbtn" id="tb-pan" onclick="setTool('pan')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 11V6a2 2 0 0 0-4 0v5M14 10V4a2 2 0 0 0-4 0v2M10 10.5V6a2 2 0 0 0-4 0v8M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>Pan
+    </button>
+    <div class="ttsep"></div>
+    <button class="ttbtn" onclick="zIn()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></button>
+    <div class="zdsp" id="zdsp">100%</div>
+    <button class="ttbtn" onclick="zOut()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg></button>
+    <button class="ttbtn" onclick="zFit()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>Fit</button>
+    <div class="ttsep"></div>
+    <button class="ttbtn" id="tb-grid" onclick="togGrid()" title="Grid">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Grid
+    </button>
+    <button class="ttbtn on" id="tb-snap" onclick="togSnap()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/><circle cx="12" cy="12" r="4"/></svg>Snap
+    </button>
+    <div class="ttsep"></div>
+    <!-- Alignment -->
+    <button class="ttbtn" onclick="aln('l')" title="Align Left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="4" x2="4" y2="20"/><rect x="6" y="7" width="10" height="4" rx="1"/><rect x="6" y="13" width="14" height="4" rx="1"/></svg></button>
+    <button class="ttbtn" onclick="aln('ch')" title="Center H"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="4" x2="12" y2="20"/><rect x="4" y="7" width="16" height="4" rx="1"/><rect x="7" y="13" width="10" height="4" rx="1"/></svg></button>
+    <button class="ttbtn" onclick="aln('r')" title="Align Right"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="20" y1="4" x2="20" y2="20"/><rect x="8" y="7" width="10" height="4" rx="1"/><rect x="4" y="13" width="14" height="4" rx="1"/></svg></button>
+    <button class="ttbtn" onclick="aln('t')" title="Align Top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="4" x2="20" y2="4"/><rect x="7" y="6" width="4" height="10" rx="1"/><rect x="13" y="6" width="4" height="14" rx="1"/></svg></button>
+    <button class="ttbtn" onclick="aln('cv')" title="Center V"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="12" x2="20" y2="12"/><rect x="7" y="4" width="4" height="16" rx="1"/><rect x="13" y="7" width="4" height="10" rx="1"/></svg></button>
+    <button class="ttbtn" onclick="aln('b')" title="Align Bottom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="20" x2="20" y2="20"/><rect x="7" y="8" width="4" height="10" rx="1"/><rect x="13" y="4" width="4" height="14" rx="1"/></svg></button>
+    <div class="ttsep"></div>
+    <button class="ttbtn" onclick="distH()">Dist H</button>
+    <button class="ttbtn" onclick="distV()">Dist V</button>
+    <div class="ttsep"></div>
+    <button class="ttbtn" onclick="bringFront()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>Front</button>
+    <button class="ttbtn" onclick="sendBack()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 6 12 11 7 6"/><polyline points="17 13 12 18 7 13"/></svg>Back</button>
+  </div>
+
+  <!-- Canvas -->
+  <div id="cw" oncontextmenu="ctxMenu(event)">
+    <div id="cvs">
+      <div class="rbx-screen" id="screen">
+        <div class="screen-lbl">ScreenGui · 1920 × 1080</div>
+      </div>
+    </div>
+    <div id="selbox"></div>
+  </div>
+</div>
+
+<!-- RIGHT PANEL -->
+<div id="rp">
+  <div class="rp-head">
+    <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg></div>
+    <span id="ptitle">Properties</span>
+  </div>
+  <div class="rp-tabs">
+    <div class="rptab on" onclick="rTab('props',this)">Props</div>
+    <div class="rptab" onclick="rTab('tween',this)">Tween</div>
+    <div class="rptab" onclick="rTab('sound',this)">Sound</div>
+    <div class="rptab" onclick="rTab('scale',this)">Scale</div>
+  </div>
+  <div id="propscroll">
+    <div class="nosel">Select an element to start editing</div>
+  </div>
+</div>
+
+</div><!-- end main -->
+
+<!-- BOTTOM PANEL -->
+<div id="bp">
+  <div class="btabs">
+    <button class="bttab on" onclick="bTab('lua',this)">Lua Script</button>
+    <button class="bttab" onclick="bTab('json',this)">JSON</button>
+    <button class="bttab" onclick="bTab('nodes',this)" id="node-tab-btn">Visual Nodes</button>
+    <button class="bttab" onclick="bTab('history',this)">History</button>
+    <div class="btacts">
+      <button class="ba" onclick="copyLua()">Copy</button>
+      <button class="ba pri" onclick="exportLua()">Export .lua</button>
+    </div>
+  </div>
+  <textarea id="lua-out" readonly></textarea>
+  <div id="node-area">
+    <svg id="node-svg"></svg>
+  </div>
+</div>
+
+<!-- STATUSBAR -->
+<div id="sb">
+  <span id="sb-el">0 elements</span>
+  <div class="sbsep"></div>
+  <span id="sb-pos">X: 0  Y: 0</span>
+  <div class="sbsep"></div>
+  <span id="sb-sz"></span>
+  <div class="sbsep"></div>
+  <span id="sb-info">V=Select  H=Pan  Del=Delete  Ctrl+D=Dupe  DoubleClick=Script  Ctrl+Z/Y=Undo/Redo  Arrows=Nudge</span>
+</div>
+
+<!-- CONTEXT MENU -->
+<div id="ctx" style="position:fixed;z-index:5000;background:var(--s2);border:1px solid var(--b2);border-radius:8px;padding:4px;min-width:168px;box-shadow:var(--sh);display:none;">
+  <div class="ctx-i" onclick="dupeSel()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Duplicate<span class="csk">Ctrl+D</span></div>
+  <div class="ctx-i" onclick="openScriptMdl()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>Edit Script<span class="csk">Dbl-click</span></div>
+  <div class="ctx-i" onclick="bringFront()">Bring to Front</div>
+  <div class="ctx-i" onclick="sendBack()">Send to Back</div>
+  <div style="height:1px;background:var(--b1);margin:3px 0;"></div>
+  <div class="ctx-i ctx-d" onclick="delSel()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>Delete<span class="csk">Del</span></div>
+</div>
+<style>
+.ctx-i{display:flex;align-items:center;gap:7px;padding:6px 9px;border-radius:5px;cursor:pointer;color:var(--txt2);font-size:11.5px;transition:all .1s;}
+.ctx-i:hover{background:var(--s3);color:var(--txt);}
+.ctx-d:hover{background:rgba(255,77,109,.1);color:var(--red);}
+.csk{margin-left:auto;font-size:9.5px;color:var(--txt3);font-family:'JetBrains Mono',monospace;}
+</style>
+
+<!-- SCRIPT MODAL -->
+<div class="ov" id="scr-ov">
+  <div class="mdl" style="min-width:520px;">
+    <div class="mh">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      Script Editor
+      <button class="mx" onclick="closeOv('scr-ov')">×</button>
+    </div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--acc2);margin-bottom:7px;" id="scr-el-nm"></div>
+    <div style="margin-bottom:8px;">
+      <div class="sec-lbl" style="margin-bottom:5px;">Quick Logic Templates</div>
+      <div style="display:flex;gap:5px;flex-wrap:wrap;" id="scr-templates"></div>
+    </div>
+    <textarea id="scr-in" rows="10" placeholder="-- Write your Lua script here&#10;local element = script.Parent&#10;element.MouseButton1Click:Connect(function()&#10;    -- Your code&#10;end)"></textarea>
+    <div class="mf">
+      <button class="btn-s" onclick="closeOv('scr-ov')">Cancel</button>
+      <button class="btn-p" onclick="saveScript()">Save Script</button>
+    </div>
+  </div>
+</div>
+
+<!-- IMAGE MODAL -->
+<div class="ov" id="img-ov">
+  <div class="mdl">
+    <div class="mh">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      Image Source
+      <button class="mx" onclick="closeOv('img-ov')">×</button>
+    </div>
+    <div class="img-drop" onclick="document.getElementById('img-file').click()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="28" height="28" style="display:block;margin:0 auto 8px;color:var(--txt3)"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      Click to upload or drag & drop
+      <input type="file" id="img-file" accept="image/*" style="display:none" onchange="handleImgUpload(event)">
+    </div>
+    <div style="margin-top:10px;">
+      <div class="pl" style="margin-bottom:4px;">Roblox Asset ID</div>
+      <input type="text" id="img-aid" placeholder="rbxassetid://0">
+    </div>
+    <div id="img-prev" style="margin-top:10px;display:none;"><img id="img-pimg" style="max-width:100%;max-height:130px;border-radius:6px;border:1px solid var(--b2);display:block;"></div>
+    <div class="mf">
+      <button class="btn-s" onclick="closeOv('img-ov')">Cancel</button>
+      <button class="btn-p" onclick="applyImg()">Apply</button>
+    </div>
+  </div>
+</div>
+
+<!-- GLOBALS MODAL -->
+<div class="ov" id="glb-ov">
+  <div class="mdl" style="min-width:420px;">
+    <div class="mh">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      Global Variables
+      <button class="mx" onclick="closeOv('glb-ov')">×</button>
+    </div>
+    <div style="font-size:11px;color:var(--txt3);margin-bottom:10px;">Change a value here to update all elements using this variable.</div>
+    <div id="gv-list"></div>
+    <button class="btn-s" onclick="addGV()" style="width:100%;margin-top:8px;">+ Add Variable</button>
+    <div class="mf">
+      <button class="btn-p" onclick="applyGlobals()">Apply All</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// CORE STATE
+// ═══════════════════════════════════════════════════════
+const SW=1920,SH=1080;
+let els={},selIds=new Set(),ctr=0,zoom=1,panX=0,panY=0;
+let curTool='sel',snapOn=true,gridOn=true;
+let histStack=[],histIdx=-1;
+let activeScriptEl=null,imgDataCache=null;
+let globalVars={primaryColor:'#7c6bff',accentColor:'#00e5a0',fontSize:'16',cornerRadius:'8'};
+let nodes={},nodeConns=[],nodeCtr=0;
+let activeRpTab='props',activeBtTab='lua';
+let isDraggingCanvas=false,panSX=0,panSY=0,panSPX=0,panSPY=0;
+let isBoxSel=false,boxSX=0,boxSY=0;
+let tweenSettings={};
+let soundSettings={};
+
+const SOUND_LIB={
+  'Click':'rbxassetid://6895079853','Hover':'rbxassetid://6895079899',
+  'Open':'rbxassetid://6895080010','Close':'rbxassetid://6895080055',
+  'Success':'rbxassetid://6895079700','Error':'rbxassetid://6895079600',
+  'Notify':'rbxassetid://6895079400','Pop':'rbxassetid://6895079300',
+};
+
+const TWEEN_STYLES=['Linear','Sine','Back','Bounce','Elastic','Expo','Cubic','Quad','Quart','Quint','Circ'];
+const TWEEN_DIRS=['In','Out','InOut'];
+
+const PRESETS=[
+  {n:'Glassmorphism',c:'rgba(255,255,255,0.4)',d:{bg:'rgba(255,255,255,0.08)',strokeColor:'rgba(255,255,255,0.18)',strokeThick:1,rounding:16,transparency:.05,shadow:true,shadowColor:'#000',shadowBlur:20}},
+  {n:'Cyber Neon',c:'#00d4ff',d:{bg:'#050518',strokeColor:'#00d4ff',strokeThick:1,rounding:4,textColor:'#00d4ff',shadow:true,shadowColor:'#00d4ff',shadowBlur:12}},
+  {n:'Modern Dark',c:'#5865f2',d:{bg:'#2b2d31',strokeColor:'#1e1f22',strokeThick:1,rounding:8,textColor:'#dbdee1',shadow:false}},
+  {n:'Deep Shadow',c:'#333',d:{bg:'#1a1a1a',strokeColor:'transparent',strokeThick:0,rounding:10,shadow:true,shadowColor:'#000',shadowBlur:30}},
+  {n:'Retro Win98',c:'#c0c0c0',d:{bg:'#c0c0c0',strokeColor:'#ffffff',strokeThick:2,rounding:0,textColor:'#000000',shadow:false}},
+  {n:'Emerald Pro',c:'#00b894',d:{bg:'#0a1f18',strokeColor:'#ffd700',strokeThick:1,rounding:6,textColor:'#ffd700',shadow:true,shadowColor:'#00b894',shadowBlur:15}},
+  {n:'Blood Red',c:'#c0392b',d:{bg:'#1a0a0a',strokeColor:'#c0392b',strokeThick:1,rounding:6,textColor:'#ff6b6b',shadow:true,shadowColor:'#c0392b',shadowBlur:12}},
+  {n:'Ghost UI',c:'rgba(255,255,255,0.6)',d:{bg:'transparent',strokeColor:'rgba(255,255,255,0.5)',strokeThick:1,rounding:8,textColor:'rgba(255,255,255,0.9)',shadow:false}},
+  {n:'Luxury Gold',c:'#ffd700',d:{bg:'#1a1400',strokeColor:'#ffd700',strokeThick:1,rounding:8,textColor:'#ffd700',shadow:true,shadowColor:'#ffd700',shadowBlur:10}},
+  {n:'Void Black',c:'#ffffff',d:{bg:'#000000',strokeColor:'transparent',strokeThick:0,rounding:4,textColor:'#ffffff',shadow:false}},
+  {n:'Neon Purple',c:'#7c6bff',d:{bg:'#0d0a1a',strokeColor:'#7c6bff',strokeThick:1,rounding:8,textColor:'#a594ff',shadow:true,shadowColor:'#7c6bff',shadowBlur:12}},
+  {n:'Ocean Blue',c:'#0077b6',d:{bg:'#03045e',strokeColor:'#0077b6',strokeThick:1,rounding:10,textColor:'#90e0ef',shadow:true,shadowColor:'#0077b6',shadowBlur:10}},
+  {n:'Pastel',c:'#ffc8dd',d:{bg:'#fff0f3',strokeColor:'#ffc8dd',strokeThick:1,rounding:20,textColor:'#c9184a',shadow:false}},
+  {n:'Terminal',c:'#00ff41',d:{bg:'#001100',strokeColor:'#00ff41',strokeThick:1,rounding:2,textColor:'#00ff41',shadow:true,shadowColor:'#00ff41',shadowBlur:5}},
+  {n:'Neumorphic',c:'#3a3a4a',d:{bg:'#1e1e2e',strokeColor:'transparent',strokeThick:0,rounding:12,shadow:true,shadowColor:'#000',shadowBlur:20}},
+];
+
+const EL_ICONS={'Frame':'⬜','ScrollFrame':'📜','Viewport':'🎬','Canvas':'🎨','TextLabel':'🔤','TextButton':'🔘','TextBox':'📝','Toggle':'⏻','ImageLabel':'🖼','ImageButton':'🖼','Slider':'🎚','ProgressBar':'📊','Dropdown':'▼','Checkbox':'☑','RadioBtn':'⭕','Badge':'🏅','Separator':'─','Tooltip':'💬','Notification':'🔔'};
+
+const SCRIPT_TEMPLATES=[
+  {n:'Close Button',c:`local gui = script.Parent.Parent\nscript.Parent.MouseButton1Click:Connect(function()\n    gui:Destroy()\nend)`},
+  {n:'Hover Effect',c:`local btn = script.Parent\nlocal orig = btn.BackgroundColor3\nbtn.MouseEnter:Connect(function()\n    btn.BackgroundColor3 = Color3.fromRGB(100,100,255)\nend)\nbtn.MouseLeave:Connect(function()\n    btn.BackgroundColor3 = orig\nend)`},
+  {n:'Toggle Visibility',c:`local target = script.Parent.Parent.Frame\nscript.Parent.MouseButton1Click:Connect(function()\n    target.Visible = not target.Visible\nend)`},
+  {n:'Tween Open',c:`local TweenService = game:GetService("TweenService")\nlocal frame = script.Parent\nlocal info = TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out)\nlocal tween = TweenService:Create(frame, info, {Size = UDim2.new(0, 400, 0, 300)})\nscript.Parent.MouseButton1Click:Connect(function()\n    tween:Play()\nend)`},
+  {n:'Drag Window',c:`local frame = script.Parent\nlocal dragging, dragStart, startPos\nframe.InputBegan:Connect(function(input)\n    if input.UserInputType == Enum.UserInputType.MouseButton1 then\n        dragging = true\n        dragStart = input.Position\n        startPos = frame.Position\n    end\nend)\ngame:GetService("UserInputService").InputChanged:Connect(function(input)\n    if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then\n        local delta = input.Position - dragStart\n        frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset+delta.X, startPos.Y.Scale, startPos.Y.Offset+delta.Y)\n    end\nend)\ngame:GetService("UserInputService").InputEnded:Connect(function(input)\n    if input.UserInputType == Enum.UserInputType.MouseButton1 then dragging = false end\nend)`},
+  {n:'Notification',c:`local notif = script.Parent\nlocal TweenService = game:GetService("TweenService")\nnotif.Position = UDim2.new(0.5,-200,-0.1,0)\nnotif.Visible = true\nlocal tweenIn = TweenService:Create(notif, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Position = UDim2.new(0.5,-200,0,20)})\ntweenIn:Play()\ntask.delay(3, function()\n    local tweenOut = TweenService:Create(notif, TweenInfo.new(0.4), {Position = UDim2.new(0.5,-200,-0.15,0)})\n    tweenOut:Play()\n    tweenOut.Completed:Connect(function() notif:Destroy() end)\nend)`},
+];
+
+// ═══════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════
+const cw=document.getElementById('cw');
+const cvs=document.getElementById('cvs');
+const screen=document.getElementById('screen');
+
+function init(){
+  screen.style.width=SW+'px';screen.style.height=SH+'px';
+  zFit();
+  buildPresets();
+  buildScriptTemplates();
+  setupPan();setupBoxSel();
+  document.addEventListener('keydown',onKey);
+  cw.addEventListener('mousemove',onMouseMove);
+  pushHist('Init');
+  // Sample layout
+  const f=addEl('Frame',{x:660,y:340,w:600,h:340,name:'MainWindow',bg:'#13131c',rounding:16,shadow:true,shadowBlur:40,shadowColor:'#000'});
+  addEl('TextLabel',{x:690,y:365,w:540,h:54,name:'Title',text:'RobloxForge PRO',textColor:'#a594ff',textSize:32,bg:'transparent',fontFamily:'GothamBold'});
+  addEl('TextButton',{x:720,y:580,w:220,h:52,name:'PlayBtn',text:'▶  Play Game',bg:'#7c6bff',textColor:'#fff',rounding:26,shadow:true,shadowColor:'#7c6bff',shadowBlur:16});
+  addEl('TextButton',{x:960,y:580,w:160,h:52,name:'CloseBtn',text:'✕  Close',bg:'rgba(255,77,109,0.15)',strokeColor:'#ff4d6d',strokeThick:1,textColor:'#ff4d6d',rounding:26});
+  clearSel();
+  genCode();
+}
+
+// ═══════════════════════════════════════════════════════
+// PRESETS
+// ═══════════════════════════════════════════════════════
+function buildPresets(){
+  const el=document.getElementById('preset-list');
+  el.innerHTML=PRESETS.map((p,i)=>`<div class="pb" onclick="applyPreset(${i})"><div class="pdot" style="background:${p.c}"></div>${p.n}</div>`).join('');
+}
+function applyPreset(i){
+  if(!selIds.size){toast('Select an element first','warn');return;}
+  const p=PRESETS[i];
+  selIds.forEach(id=>{
+    if(!els[id])return;
+    Object.assign(els[id],p.d);
+    rfEl(id);
+  });
+  updProps();genCode();
+  toast(`Applied "${p.n}"`, 'ok');pushHist('Preset');
+}
+
+function buildScriptTemplates(){
+  const c=document.getElementById('scr-templates');
+  c.innerHTML=SCRIPT_TEMPLATES.map((t,i)=>`<button style="padding:4px 9px;background:var(--s4);border:1px solid var(--b2);border-radius:5px;cursor:pointer;color:var(--txt2);font-size:10px;" onclick="insertTemplate(${i})">${t.n}</button>`).join('');
+}
+function insertTemplate(i){document.getElementById('scr-in').value=SCRIPT_TEMPLATES[i].c;}
+
+// ═══════════════════════════════════════════════════════
+// ADD ELEMENT
+// ═══════════════════════════════════════════════════════
+function addEl(type,opts={}){
+  ctr++;const id=`el_${ctr}`;
+  const def={
+    id,type,name:`${type}_${ctr}`,
+    x:Math.round(100+(ctr%12)*18),y:Math.round(100+(ctr%9)*18),
+    w:defW(type),h:defH(type),
+    bg:defBg(type),strokeColor:'transparent',strokeThick:0,
+    transparency:0,rounding:6,zIndex:ctr,
+    text:defTxt(type),textColor:'#ffffff',textSize:16,
+    fontFamily:'GothamBold',textAlign:'Center',
+    imageId:'rbxassetid://0',imageData:null,
+    visible:true,locked:false,
+    shadow:false,shadowBlur:10,shadowColor:'#000000',
+    gradient:false,gradC1:'#7c6bff',gradC2:'#a594ff',gradDir:'h',
+    script:'',scriptEnabled:false,
+    tweenStyle:'Quad',tweenDir:'Out',tweenTime:0.3,
+    sound:'',soundEnabled:false,
+    toggleState:false,sliderVal:50,progressVal:70,
+    checkState:false,radioState:false,
+    scaleMode:'Offset',
+    anchorX:0,anchorY:0,
+  };
+  els[id]=Object.assign(def,opts);
+  const div=document.createElement('div');
+  div.id=id;div.className='gel';
+  div.innerHTML=buildGelHTML(id);
+  screen.appendChild(div);
+  setupElInteract(div,id);
+  rfEl(id);clearSel();selEl(id);
+  updLayers();genCode();
+  if(!opts._nosound)pushHist(`Add ${type}`);
+  return id;
+}
+
+function defW(t){return{Slider:200,ProgressBar:220,Separator:200,Badge:60,Tooltip:160,Toggle:140,Notification:400}[t]||160;}
+function defH(t){return{Slider:28,ProgressBar:22,Separator:6,Badge:28,Tooltip:36,Toggle:44,Notification:50}[t]||50;}
+function defBg(t){
+  if(t==='TextButton')return'#7c6bff';
+  if(t==='Badge')return'#ff4d6d';
+  if(t==='Notification')return'#1e1e2e';
+  return'#1e1e2e';
+}
+function defTxt(t){
+  const m={TextLabel:'Label',TextButton:'Button',TextBox:'Placeholder...',Toggle:'Toggle',Dropdown:'Select...',Badge:'NEW',Tooltip:'Tooltip text',Notification:'🔔  You have a new message!'};
+  return m[t]||'';
+}
+function buildGelHTML(id){
+  return `<div class="outline"></div>
+  <div class="hndl nw" data-d="nw"></div><div class="hndl n" data-d="n"></div>
+  <div class="hndl ne" data-d="ne"></div><div class="hndl w" data-d="w"></div>
+  <div class="hndl e" data-d="e"></div><div class="hndl sw" data-d="sw"></div>
+  <div class="hndl s" data-d="s"></div><div class="hndl se" data-d="se"></div>
+  <div class="el-inner" id="inn_${id}"></div>`;
+}
+
+// ═══════════════════════════════════════════════════════
+// REFRESH ELEMENT VISUALS
+// ═══════════════════════════════════════════════════════
+function rfEl(id){
+  const d=els[id];if(!d)return;
+  const div=document.getElementById(id);if(!div)return;
+  const inn=document.getElementById('inn_'+id);
+  const bg=d.gradient?`linear-gradient(${d.gradDir==='h'?90:180}deg,${d.gradC1},${d.gradC2})`:d.bg;
+  div.style.cssText=`left:${d.x}px;top:${d.y}px;width:${d.w}px;height:${d.h}px;
+    background:${bg};opacity:${1-d.transparency};border-radius:${d.rounding}px;
+    z-index:${d.zIndex};border:${d.strokeThick}px solid ${d.strokeColor};
+    display:${d.visible?'flex':'none'};align-items:center;justify-content:center;
+    cursor:${d.locked?'not-allowed':'move'};position:absolute;
+    min-width:4px;min-height:4px;user-select:none;
+    ${d.shadow?`box-shadow:0 ${d.shadowBlur/2}px ${d.shadowBlur}px ${d.shadowColor}88;`:''}`;
+  if(d.imageData&&(d.type==='ImageLabel'||d.type==='ImageButton')){
+    div.style.backgroundImage=`url('${d.imageData}')`;
+    div.style.backgroundSize='cover';div.style.backgroundPosition='center';
+  }
+  if(inn)inn.innerHTML=renderInner(d);
+}
+
+function renderInner(d){
+  const ts=`color:${d.textColor};font-size:${d.textSize}px;font-family:'DM Sans',sans-serif;text-align:${d.textAlign.toLowerCase()};padding:0 8px;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;pointer-events:none;`;
+  switch(d.type){
+    case 'Toggle':return`<div style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:0 10px;">
+      <span style="${ts}flex:1;text-align:left;">${d.text}</span>
+      <div style="width:38px;height:22px;background:${d.toggleState?'#7c6bff':'#333'};border-radius:11px;position:relative;flex-shrink:0;transition:background .2s;">
+        <div style="width:16px;height:16px;background:#fff;border-radius:50%;position:absolute;top:3px;left:${d.toggleState?'19px':'3px'};transition:left .2s;"></div>
+      </div></div>`;
+    case 'Slider':return`<div style="width:100%;padding:0 10px;">
+      <input type="range" value="${d.sliderVal}" min="0" max="100" style="width:100%;accent-color:${d.textColor||'#7c6bff'};cursor:pointer;"></div>`;
+    case 'ProgressBar':return`<div style="width:100%;padding:0 8px;">
+      <div style="width:100%;height:${Math.max(6,d.h-12)}px;background:rgba(255,255,255,0.12);border-radius:99px;overflow:hidden;">
+        <div style="height:100%;width:${d.progressVal}%;background:${d.textColor||'#7c6bff'};border-radius:99px;"></div>
+      </div></div>`;
+    case 'Checkbox':return`<div style="display:flex;align-items:center;gap:7px;padding:0 10px;">
+      <div style="width:17px;height:17px;border:2px solid ${d.textColor||'#fff'};border-radius:3px;background:${d.checkState?d.textColor||'#7c6bff':'transparent'};flex-shrink:0;display:flex;align-items:center;justify-content:center;">
+        ${d.checkState?'<svg viewBox="0 0 12 12" width="11" height="11"><polyline points="2,6 5,9 10,3" stroke="white" stroke-width="2" fill="none"/></svg>':''}
+      </div><span style="${ts}flex:1;text-align:left;padding:0;">${d.text}</span></div>`;
+    case 'RadioBtn':return`<div style="display:flex;align-items:center;gap:7px;padding:0 10px;">
+      <div style="width:17px;height:17px;border:2px solid ${d.textColor||'#fff'};border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        ${d.radioState?`<div style="width:9px;height:9px;background:${d.textColor||'#7c6bff'};border-radius:50%;"></div>`:''}
+      </div><span style="${ts}flex:1;text-align:left;padding:0;">${d.text}</span></div>`;
+    case 'Dropdown':return`<div style="display:flex;align-items:center;justify-content:space-between;padding:0 10px;width:100%;">
+      <span style="${ts}flex:1;text-align:left;padding:0;">${d.text}</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="${d.textColor}" stroke-width="2" width="14" height="14"><polyline points="6 9 12 15 18 9"/></svg></div>`;
+    case 'Separator':return`<div style="width:100%;height:${Math.max(1,Math.min(d.h,4))}px;background:${d.textColor||'rgba(255,255,255,0.2)'};border-radius:99px;"></div>`;
+    case 'Badge':return`<div style="display:inline-flex;align-items:center;justify-content:center;padding:2px 10px;background:${d.textColor||'#ff4d6d'};color:${d.bg||'#fff'};border-radius:99px;font-size:${Math.max(10,d.textSize-2)}px;font-weight:700;">${d.text}</div>`;
+    case 'Tooltip':return`<div style="${ts}display:flex;align-items:center;justify-content:center;height:100%;">${d.text}</div>`;
+    case 'Notification':return`<div style="display:flex;align-items:center;gap:10px;padding:0 14px;width:100%;">
+      <span style="font-size:20px;">🔔</span>
+      <span style="${ts}flex:1;text-align:left;padding:0;">${d.text}</span>
+      <span style="color:${d.textColor};opacity:.6;font-size:18px;cursor:pointer;">✕</span></div>`;
+    default:
+      if(d.text!==undefined&&d.text!=='')return`<span style="${ts}display:flex;align-items:center;justify-content:center;height:100%;">${d.text}</span>`;
+      return'';
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// ELEMENT INTERACTION (DRAG + 8-POINT RESIZE)
+// ═══════════════════════════════════════════════════════
+function setupElInteract(div,id){
+  let lastClick=0;
+  div.addEventListener('mousedown',e=>{
+    if(e.target.classList.contains('hndl'))return;
+    if(els[id]?.locked)return;
+    e.stopPropagation();
+    const now=Date.now();
+    if(now-lastClick<350){openScriptMdlFor(id);return;}
+    lastClick=now;
+    if(!e.shiftKey&&!selIds.has(id))clearSel();
+    selEl(id,e.shiftKey);
+    const sx=e.clientX,sy=e.clientY;
+    const startP={};
+    selIds.forEach(sid=>{if(els[sid])startP[sid]={x:els[sid].x,y:els[sid].y};});
+    const mv=e=>{
+      const dx=(e.clientX-sx)/zoom,dy=(e.clientY-sy)/zoom;
+      selIds.forEach(sid=>{
+        if(!els[sid]||!startP[sid])return;
+        let nx=startP[sid].x+dx,ny=startP[sid].y+dy;
+        if(snapOn){nx=Math.round(nx/4)*4;ny=Math.round(ny/4)*4;}
+        nx=Math.max(0,Math.min(SW-els[sid].w,nx));
+        ny=Math.max(0,Math.min(SH-els[sid].h,ny));
+        els[sid].x=nx;els[sid].y=ny;rfEl(sid);
+      });
+      updProps();genCode();showSnapGuides();
+    };
+    const up=()=>{document.removeEventListener('mousemove',mv);document.removeEventListener('mouseup',up);hideSnapGuides();pushHist('Move');};
+    document.addEventListener('mousemove',mv);document.addEventListener('mouseup',up);
+  });
+
+  div.querySelectorAll('.hndl').forEach(h=>{
+    h.addEventListener('mousedown',e=>{
+      e.stopPropagation();e.preventDefault();
+      const dir=h.dataset.d;
+      const smx=e.clientX,smy=e.clientY;
+      const sd={x:els[id].x,y:els[id].y,w:els[id].w,h:els[id].h};
+      const mv=e=>{
+        const dx=(e.clientX-smx)/zoom,dy=(e.clientY-smy)/zoom;
+        let {x,y,w,h}=sd;
+        if(dir.includes('e'))w=Math.max(8,w+dx);
+        if(dir.includes('s'))h=Math.max(8,h+dy);
+        if(dir.includes('w')){w=Math.max(8,w-dx);x=sd.x+sd.w-w;}
+        if(dir.includes('n')){h=Math.max(8,h-dy);y=sd.y+sd.h-h;}
+        if(snapOn){w=Math.round(w/4)*4;h=Math.round(h/4)*4;}
+        els[id].x=x;els[id].y=y;els[id].w=w;els[id].h=h;
+        rfEl(id);updProps();genCode();
+      };
+      const up=()=>{document.removeEventListener('mousemove',mv);document.removeEventListener('mouseup',up);pushHist('Resize');};
+      document.addEventListener('mousemove',mv);document.addEventListener('mouseup',up);
+    });
+  });
+}
+
+// Snap guides
+function showSnapGuides(){
+  hideSnapGuides();
+  if(!snapOn)return;
+  const f=getFirstSel();if(!f)return;
+  const cx=f.x+f.w/2,cy=f.y+f.h/2;
+  const makeLine=(cls,style)=>{
+    const d=document.createElement('div');
+    d.className=`snap-guide ${cls}`;Object.assign(d.style,style);
+    screen.appendChild(d);
+  };
+  if(Math.abs(cx-SW/2)<10)makeLine('v',{left:SW/2+'px'});
+  if(Math.abs(cy-SH/2)<10)makeLine('h',{top:SH/2+'px'});
+}
+function hideSnapGuides(){screen.querySelectorAll('.snap-guide').forEach(e=>e.remove());}
+
+// ═══════════════════════════════════════════════════════
+// SELECTION
+// ═══════════════════════════════════════════════════════
+function selEl(id,add=false){
+  if(!add)clearSel();
+  selIds.add(id);
+  const d=document.getElementById(id);
+  if(d){d.classList.add('sel');d.querySelectorAll('.hndl').forEach(h=>h.style.display='block');}
+  updProps();updLayers();updStatus();
+}
+function clearSel(){
+  selIds.forEach(id=>{
+    const d=document.getElementById(id);
+    if(d){d.classList.remove('sel');d.querySelectorAll('.hndl').forEach(h=>h.style.display='none');}
+  });
+  selIds.clear();updProps();updStatus();
+}
+function getFirstSel(){return selIds.size>0?els[[...selIds][0]]:null;}
+function selAll(){Object.keys(els).forEach(id=>selEl(id,true));}
+
+// ═══════════════════════════════════════════════════════
+// LAYERS
+// ═══════════════════════════════════════════════════════
+function updLayers(){
+  const exp=document.getElementById('explorer');
+  const sorted=Object.values(els).sort((a,b)=>b.zIndex-a.zIndex);
+  if(!sorted.length){exp.innerHTML='<div class="nosel">No elements</div>';updStatus();return;}
+  exp.innerHTML=sorted.map(el=>`
+    <div class="ex-item ${selIds.has(el.id)?'sel':''}" onclick="selEl('${el.id}',event.shiftKey)" ondblclick="openScriptMdlFor('${el.id}')">
+      <span class="ico">${EL_ICONS[el.type]||'▪'}</span>
+      <span class="nm">${el.name}</span>
+      <span class="zi">${el.zIndex}</span>
+      <button class="ex-vis" onclick="event.stopPropagation();toggleVis('${el.id}')" title="Toggle visibility">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${el.visible?'<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>':'<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19M1 1l22 22"/>'}</svg>
+      </button>
+      <button class="ex-lock" onclick="event.stopPropagation();toggleLock('${el.id}')" title="Toggle lock">
+        <svg viewBox="0 0 24 24" fill="none" stroke="${el.locked?'#ffd23f':'currentColor'}" stroke-width="2" width="11" height="11">${el.locked?'<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>':'<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/>'}</svg>
+      </button>
+    </div>`).join('');
+  updStatus();
+}
+function toggleVis(id){if(els[id]){els[id].visible=!els[id].visible;rfEl(id);updLayers();}}
+function toggleLock(id){if(els[id]){els[id].locked=!els[id].locked;updLayers();}}
+
+// ═══════════════════════════════════════════════════════
+// PROPERTIES PANEL
+// ═══════════════════════════════════════════════════════
+function updProps(){
+  const sc=document.getElementById('propscroll');
+  const ti=document.getElementById('ptitle');
+  if(!selIds.size){ti.textContent='Properties';sc.innerHTML='<div class="nosel">Select an element to start editing</div>';return;}
+  if(selIds.size>1){ti.textContent=`${selIds.size} selected`;sc.innerHTML=renderMultiProps();bindMultiProps();return;}
+  const d=getFirstSel();if(!d)return;
+  ti.textContent=d.name;
+
+  if(activeRpTab==='tween'){sc.innerHTML=renderTweenProps(d);bindTweenProps(d);return;}
+  if(activeRpTab==='sound'){sc.innerHTML=renderSoundProps(d);bindSoundProps(d);return;}
+  if(activeRpTab==='scale'){sc.innerHTML=renderScaleProps(d);bindScaleProps(d);return;}
+  sc.innerHTML=renderProps(d);
+  bindProps();
+}
+
+function renderProps(d){
+  return`
+  <div class="pg2"><div class="pgh" onclick="togGrp(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><path d="M5 9l-3 3 3 3M9 5l3-3 3 3"/></svg>Transform<svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><polyline points="6 9 12 15 18 9"/></svg></div>
+  <div class="pgb">
+    <div class="pr"><div class="pl">Name</div><div class="pv"><input type="text" value="${d.name}" data-p="name"></div></div>
+    <div class="pr"><div class="pl">Position</div><div class="pv di"><input type="number" value="${Math.round(d.x)}" data-p="x" placeholder="X"><input type="number" value="${Math.round(d.y)}" data-p="y" placeholder="Y"></div></div>
+    <div class="pr"><div class="pl">Size</div><div class="pv di"><input type="number" value="${Math.round(d.w)}" data-p="w" placeholder="W"><input type="number" value="${Math.round(d.h)}" data-p="h" placeholder="H"></div></div>
+    <div class="pr"><div class="pl">Z-Index</div><div class="pv stpr"><button class="stpr-btn" onclick="setProp('zIndex',${d.zIndex-1})">−</button><input type="number" value="${d.zIndex}" data-p="zIndex"><button class="stpr-btn" onclick="setProp('zIndex',${d.zIndex+1})">+</button></div></div>
+    <div class="pr"><div class="pl">Visible</div><div class="pv togrow"><div class="tog ${d.visible?'on':''}" onclick="setProp('visible',${!d.visible})"></div><span class="togl">${d.visible?'Visible':'Hidden'}</span></div></div>
+    <div class="pr"><div class="pl">Locked</div><div class="pv togrow"><div class="tog ${d.locked?'on':''}" onclick="setProp('locked',${!d.locked})"></div><span class="togl">${d.locked?'Locked':'Unlocked'}</span></div></div>
+  </div></div>
+
+  <div class="pg2"><div class="pgh" onclick="togGrp(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><circle cx="12" cy="12" r="10"/></svg>Appearance<svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><polyline points="6 9 12 15 18 9"/></svg></div>
+  <div class="pgb">
+    <div class="pr"><div class="pl">Background</div><div class="pv crow"><input type="color" value="${toHex(d.bg)}" data-p="bg"><input type="text" value="${d.bg}" data-p="bg"></div></div>
+    <div class="pr"><div class="pl">Opacity</div><div class="pv"><input type="range" min="0" max="1" step="0.01" value="${1-d.transparency}" oninput="setProp('transparency',1-parseFloat(this.value))"></div></div>
+    <div class="pr"><div class="pl">Corner R</div><div class="pv di"><input type="range" min="0" max="100" value="${d.rounding}" data-p="rounding"><input type="number" min="0" max="100" value="${d.rounding}" data-p="rounding"></div></div>
+    <div class="pr"><div class="pl">Shadow</div><div class="pv togrow"><div class="tog ${d.shadow?'on':''}" onclick="setProp('shadow',${!d.shadow})"></div></div></div>
+    ${d.shadow?`<div class="pr"><div class="pl">Sh. Color</div><div class="pv crow"><input type="color" value="${d.shadowColor}" data-p="shadowColor"><input type="number" value="${d.shadowBlur}" data-p="shadowBlur" placeholder="Blur"></div></div>`:''}
+    <div class="pr"><div class="pl">Stroke</div><div class="pv di"><input type="color" value="${toHex(d.strokeColor)}" data-p="strokeColor" style="width:100%"><input type="number" value="${d.strokeThick}" data-p="strokeThick" placeholder="px" min="0"></div></div>
+  </div></div>
+
+  <div class="pg2"><div class="pgh" onclick="togGrp(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><defs><linearGradient id="gg"><stop offset="0%" stop-color="#7c6bff"/><stop offset="100%" stop-color="#00e5a0"/></linearGradient></defs><rect x="3" y="3" width="18" height="18" rx="2" fill="url(#gg)"/></svg>Gradient<svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><polyline points="6 9 12 15 18 9"/></svg></div>
+  <div class="pgb">
+    <div class="pr"><div class="pl">Enable</div><div class="pv togrow"><div class="tog ${d.gradient?'on':''}" onclick="setProp('gradient',${!d.gradient})"></div></div></div>
+    <div class="pr"><div class="pl">Color 1</div><div class="pv"><input type="color" value="${d.gradC1}" data-p="gradC1" style="width:100%"></div></div>
+    <div class="pr"><div class="pl">Color 2</div><div class="pv"><input type="color" value="${d.gradC2}" data-p="gradC2" style="width:100%"></div></div>
+    <div class="pr"><div class="pl">Direction</div><div class="pv"><select data-p="gradDir"><option value="h" ${d.gradDir==='h'?'selected':''}>Horizontal</option><option value="v" ${d.gradDir==='v'?'selected':''}>Vertical</option></select></div></div>
+  </div></div>
+
+  ${d.text!==undefined?`
+  <div class="pg2"><div class="pgh" onclick="togGrp(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><polyline points="4 7 4 4 20 4 20 7"/><line x1="12" y1="4" x2="12" y2="20"/></svg>Text<svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><polyline points="6 9 12 15 18 9"/></svg></div>
+  <div class="pgb">
+    <div class="pr"><div class="pl">Content</div><div class="pv"><input type="text" value="${d.text.replace(/"/g,'&quot;')}" data-p="text"></div></div>
+    <div class="pr"><div class="pl">Color</div><div class="pv crow"><input type="color" value="${toHex(d.textColor)}" data-p="textColor"><input type="text" value="${d.textColor}" data-p="textColor"></div></div>
+    <div class="pr"><div class="pl">Size</div><div class="pv stpr"><button class="stpr-btn" onclick="setProp('textSize',${d.textSize-1})">−</button><input type="number" value="${d.textSize}" data-p="textSize"><button class="stpr-btn" onclick="setProp('textSize',${d.textSize+1})">+</button></div></div>
+    <div class="pr"><div class="pl">Align</div><div class="pv"><select data-p="textAlign"><option value="Left" ${d.textAlign==='Left'?'selected':''}>Left</option><option value="Center" ${d.textAlign==='Center'?'selected':''}>Center</option><option value="Right" ${d.textAlign==='Right'?'selected':''}>Right</option></select></div></div>
+    <div class="pr"><div class="pl">Font</div><div class="pv"><select data-p="fontFamily"><option value="GothamBold">Gotham Bold</option><option value="Gotham">Gotham</option><option value="SourceSansPro">Source Sans</option><option value="Arial">Arial</option><option value="Code">Code</option><option value="Highway">Highway</option><option value="Michroma">Michroma</option><option value="Ubuntu">Ubuntu</option></select></div></div>
+  </div></div>`:''}
+
+  ${renderSpecProps(d)}
+
+  <div class="pg2"><div class="pgh" onclick="togGrp(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><polyline points="16 18 22 12 16 6"/></svg>Script<svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><polyline points="6 9 12 15 18 9"/></svg></div>
+  <div class="pgb">
+    <div class="pr"><div class="pl">Enabled</div><div class="pv togrow"><div class="tog ${d.scriptEnabled?'on':''}" onclick="setProp('scriptEnabled',${!d.scriptEnabled})"></div></div></div>
+    <button class="btn-p" onclick="openScriptMdlFor('${d.id}')" style="width:100%;margin-top:5px;">✏️ Open Script Editor</button>
+    ${d.script?`<div style="margin-top:6px;padding:6px;background:#07070d;border-radius:5px;font-family:'JetBrains Mono',monospace;font-size:9px;color:#7dffb3;max-height:55px;overflow:hidden;">${d.script.substring(0,120)}...</div>`:''}
+  </div></div>
+
+  <div style="padding:4px 0;display:flex;flex-direction:column;gap:5px;">
+    <button class="btn-s" onclick="dupeSel()" style="width:100%">Duplicate (Ctrl+D)</button>
+    <button class="btn-d" onclick="delSel()" style="width:100%">Delete Element</button>
+  </div>`;
+}
+
+function renderSpecProps(d){
+  if(d.type==='ImageLabel'||d.type==='ImageButton')return`<div class="pg2"><div class="pgh" onclick="togGrp(this)">Image<svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><polyline points="6 9 12 15 18 9"/></svg></div><div class="pgb"><div class="pr"><div class="pl">Asset ID</div><div class="pv"><input type="text" value="${d.imageId}" data-p="imageId"></div></div><button class="btn-s" onclick="openImgMdl()" style="width:100%;margin-top:4px;">Upload Image</button></div></div>`;
+  if(d.type==='Slider')return`<div class="pg2"><div class="pgh" onclick="togGrp(this)">Slider<svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><polyline points="6 9 12 15 18 9"/></svg></div><div class="pgb"><div class="pr"><div class="pl">Value</div><div class="pv"><input type="range" min="0" max="100" value="${d.sliderVal}" data-p="sliderVal"></div></div></div></div>`;
+  if(d.type==='ProgressBar')return`<div class="pg2"><div class="pgh" onclick="togGrp(this)">Progress<svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><polyline points="6 9 12 15 18 9"/></svg></div><div class="pgb"><div class="pr"><div class="pl">Value %</div><div class="pv"><input type="number" min="0" max="100" value="${d.progressVal}" data-p="progressVal"></div></div></div></div>`;
+  if(d.type==='Toggle')return`<div class="pg2"><div class="pgh" onclick="togGrp(this)">Toggle State<svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><polyline points="6 9 12 15 18 9"/></svg></div><div class="pgb"><div class="pr"><div class="pl">State</div><div class="pv togrow"><div class="tog ${d.toggleState?'on':''}" onclick="setProp('toggleState',${!d.toggleState})"></div><span class="togl">${d.toggleState?'On':'Off'}</span></div></div></div></div>`;
+  if(d.type==='Checkbox')return`<div class="pg2"><div class="pgh" onclick="togGrp(this)">Checkbox<svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><polyline points="6 9 12 15 18 9"/></svg></div><div class="pgb"><div class="pr"><div class="pl">Checked</div><div class="pv togrow"><div class="tog ${d.checkState?'on':''}" onclick="setProp('checkState',${!d.checkState})"></div></div></div></div></div>`;
+  return'';
+}
+
+function renderTweenProps(d){
+  return`<div class="sec-lbl">TweenService Settings</div>
+  <div class="pg2"><div class="pgh">Animation Style</div><div class="pgb">
+    <div class="pr"><div class="pl">Style</div><div class="pv"><select data-tp="tweenStyle">${TWEEN_STYLES.map(s=>`<option value="${s}" ${d.tweenStyle===s?'selected':''}>${s}</option>`).join('')}</select></div></div>
+    <div class="pr"><div class="pl">Direction</div><div class="pv"><select data-tp="tweenDir">${TWEEN_DIRS.map(s=>`<option value="${s}" ${d.tweenDir===s?'selected':''}>${s}</option>`).join('')}</select></div></div>
+    <div class="pr"><div class="pl">Duration</div><div class="pv stpr"><button class="stpr-btn" onclick="setTProp('tweenTime',${Math.max(0,d.tweenTime-.1).toFixed(1)})">−</button><input type="number" step="0.1" value="${d.tweenTime}" data-tp="tweenTime"><button class="stpr-btn" onclick="setTProp('tweenTime',${(d.tweenTime+.1).toFixed(1)})">+</button></div></div>
+  </div></div>
+  <div class="sec-lbl">Tween Effects</div>
+  <div class="tween-grid">
+    ${['Fade In','Fade Out','Slide In L','Slide In R','Slide Up','Scale Up','Bounce','Spin In','Shake','Pulse','Elastic','Flip'].map(n=>`<div class="tw-btn" onclick="previewTween('${n}')" title="${n}">${n}</div>`).join('')}
+  </div>
+  <div style="margin-top:10px;font-size:11px;color:var(--txt3);">Preview plays in-editor. Export adds TweenService code.</div>`;
+}
+
+function renderSoundProps(d){
+  return`<div class="sec-lbl">Sound Events</div>
+  <div class="pg2"><div class="pgh">Event Sounds</div><div class="pgb">
+    <div class="pr"><div class="pl">On Click</div><div class="pv"><select id="snd-click"><option value="">None</option>${Object.keys(SOUND_LIB).map(k=>`<option value="${SOUND_LIB[k]}" ${(d.soundClick||'')==SOUND_LIB[k]?'selected':''}>${k}</option>`).join('')}</select></div></div>
+    <div class="pr"><div class="pl">On Hover</div><div class="pv"><select id="snd-hover"><option value="">None</option>${Object.keys(SOUND_LIB).map(k=>`<option value="${SOUND_LIB[k]}" ${(d.soundHover||'')==SOUND_LIB[k]?'selected':''}>${k}</option>`).join('')}</select></div></div>
+    <div class="pr"><div class="pl">Custom ID</div><div class="pv"><input type="text" id="snd-custom" value="${d.customSound||''}" placeholder="rbxassetid://..."></div></div>
+  </div></div>
+  <div class="sec-lbl">Sound Library</div>
+  <div class="snd-grid">${Object.keys(SOUND_LIB).map(k=>`<div class="snd-btn" onclick="setSndPreview('${SOUND_LIB[k]}')">${k}</div>`).join('')}</div>
+  <button class="btn-s" onclick="saveSoundSettings()" style="width:100%;margin-top:10px;">Save Sound Settings</button>`;
+}
+
+function renderScaleProps(d){
+  return`<div class="sec-lbl">Scale Mode (UDim2)</div>
+  <div class="pg2"><div class="pgh">Relative / Offset</div><div class="pgb">
+    <div class="pr"><div class="pl">Mode</div><div class="pv"><select id="sc-mode"><option value="Offset" ${d.scaleMode==='Offset'?'selected':''}>Offset (px)</option><option value="Scale" ${d.scaleMode==='Scale'?'selected':''}>Scale (0-1)</option><option value="Mixed">Mixed</option></select></div></div>
+    <div class="pr"><div class="pl">Anchor X</div><div class="pv"><input type="range" min="0" max="1" step="0.01" value="${d.anchorX||0}" id="anc-x"></div></div>
+    <div class="pr"><div class="pl">Anchor Y</div><div class="pv"><input type="range" min="0" max="1" step="0.01" value="${d.anchorY||0}" id="anc-y"></div></div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--green);margin-top:8px;padding:7px;background:var(--s4);border-radius:5px;" id="udim2-preview">
+      Size = UDim2.new(0, ${Math.round(d.w)}, 0, ${Math.round(d.h)})<br>
+      Position = UDim2.new(0, ${Math.round(d.x)}, 0, ${Math.round(d.y)})
+    </div>
+  </div></div>
+  <button class="btn-p" onclick="applyScaleMode()" style="width:100%">Apply & Recalculate</button>`;
+}
+
+function renderMultiProps(){
+  return`<div style="padding:8px;background:var(--s3);border-radius:7px;margin-bottom:10px;font-size:11.5px;color:var(--txt2);">${selIds.size} elements selected</div>
+  <div class="pg2"><div class="pgh">Multi-Edit</div><div class="pgb">
+    <div class="pr"><div class="pl">Background</div><div class="pv"><input type="color" id="me-bg" value="#2a2a35" style="width:100%"></div></div>
+    <div class="pr"><div class="pl">Opacity</div><div class="pv"><input type="range" min="0" max="1" step="0.01" value="1" id="me-op"></div></div>
+    <div class="pr"><div class="pl">Rounding</div><div class="pv"><input type="range" min="0" max="100" value="8" id="me-rnd"></div></div>
+    <button class="btn-s" onclick="applyMultiEdit()" style="width:100%;margin-top:5px;">Apply to All</button>
+  </div></div>
+  <div style="display:flex;flex-direction:column;gap:5px;padding:4px 0;">
+    <button class="btn-s" onclick="aln('ch')" style="width:100%">Center Horizontal</button>
+    <button class="btn-s" onclick="aln('cv')" style="width:100%">Center Vertical</button>
+    <button class="btn-s" onclick="distH()" style="width:100%">Distribute H</button>
+    <button class="btn-s" onclick="distV()" style="width:100%">Distribute V</button>
+    <button class="btn-d" onclick="delSel()" style="width:100%">Delete All</button>
+  </div>`;
+}
+
+function bindMultiProps(){
+  const bg=document.getElementById('me-bg'),op=document.getElementById('me-op'),rnd=document.getElementById('me-rnd');
+  if(bg)bg.addEventListener('input',()=>setAllProp('bg',bg.value));
+  if(op)op.addEventListener('input',()=>setAllProp('transparency',1-parseFloat(op.value)));
+  if(rnd)rnd.addEventListener('input',()=>setAllProp('rounding',parseInt(rnd.value)));
+}
+function applyMultiEdit(){
+  const bg=document.getElementById('me-bg')?.value;
+  const op=document.getElementById('me-op')?.value;
+  const rnd=document.getElementById('me-rnd')?.value;
+  if(bg)setAllProp('bg',bg);
+  if(op)setAllProp('transparency',1-parseFloat(op));
+  if(rnd)setAllProp('rounding',parseInt(rnd));
+  toast(`Applied to ${selIds.size} elements`,'ok');
+}
+
+function bindTweenProps(d){
+  document.querySelectorAll('[data-tp]').forEach(el=>{
+    el.addEventListener('change',e=>setTProp(e.target.dataset.tp,e.target.value));
+  });
+}
+function setTProp(prop,val){
+  const d=getFirstSel();if(!d)return;
+  if(['tweenTime'].includes(prop))val=parseFloat(val);
+  d[prop]=val;genCode();
+}
+
+function bindSoundProps(d){}
+function bindScaleProps(d){
+  document.getElementById('anc-x')?.addEventListener('input',e=>{const d=getFirstSel();if(d){d.anchorX=parseFloat(e.target.value);rfEl(d.id);}});
+  document.getElementById('anc-y')?.addEventListener('input',e=>{const d=getFirstSel();if(d){d.anchorY=parseFloat(e.target.value);rfEl(d.id);}});
+}
+function applyScaleMode(){
+  const mode=document.getElementById('sc-mode')?.value;
+  const d=getFirstSel();if(!d)return;
+  d.scaleMode=mode;genCode();toast('Scale mode updated','ok');
+}
+function saveSoundSettings(){
+  const d=getFirstSel();if(!d)return;
+  d.soundClick=document.getElementById('snd-click')?.value||'';
+  d.soundHover=document.getElementById('snd-hover')?.value||'';
+  d.customSound=document.getElementById('snd-custom')?.value||'';
+  genCode();toast('Sound settings saved','ok');
+}
+function setSndPreview(id){toast(`Sound: ${id}`,'ok');}
+
+function bindProps(){
+  const sc=document.getElementById('propscroll');
+  sc.querySelectorAll('[data-p]').forEach(inp=>{
+    const ev=inp.type==='color'?'input':'change';
+    inp.addEventListener(ev,e=>{
+      const p=e.target.dataset.p;
+      let val=e.target.value;
+      if(['x','y','w','h','zIndex','textSize','rounding','strokeThick','shadowBlur','sliderVal','progressVal'].includes(p))val=parseFloat(val)||0;
+      if(['transparency'].includes(p))val=parseFloat(val);
+      if(['gradient','shadow','visible','locked','scriptEnabled','toggleState','checkState','radioState'].includes(p))val=val==='true';
+      setProp(p,val,false);
+    });
+    if(inp.type==='color'){
+      const twin=sc.querySelector(`input[type=text][data-p="${inp.dataset.p}"]`);
+      if(twin)inp.addEventListener('input',()=>twin.value=inp.value);
+    }
+  });
+  sc.querySelectorAll('[type=range][data-p]').forEach(r=>{
+    const twin=sc.querySelectorAll(`[type=number][data-p="${r.dataset.p}"]`);
+    r.addEventListener('input',()=>{twin.forEach(t=>t.value=r.value);});
+    twin.forEach(t=>t.addEventListener('input',()=>{r.value=t.value;}));
+  });
+}
+
+function setProp(prop,val,rebind=true){
+  const d=getFirstSel();if(!d)return;
+  if(typeof val==='string'&&['x','y','w','h','zIndex','textSize','rounding','strokeThick','shadowBlur','sliderVal','progressVal'].includes(prop))val=parseFloat(val)||0;
+  d[prop]=val;rfEl(d.id);
+  if(rebind)updProps();
+  genCode();updLayers();updStatus();
+}
+function setAllProp(prop,val){selIds.forEach(id=>{if(els[id]){els[id][prop]=val;rfEl(id);}});genCode();}
+
+function togGrp(h){h.classList.toggle('coll');h.nextElementSibling.classList.toggle('hid');}
+function rTab(t,el){activeRpTab=t;document.querySelectorAll('.rptab').forEach(x=>x.classList.remove('on'));el.classList.add('on');updProps();}
+
+// ═══════════════════════════════════════════════════════
+// TWEEN PREVIEW
+// ═══════════════════════════════════════════════════════
+function previewTween(type){
+  const d=getFirstSel();if(!d)return;
+  const div=document.getElementById(d.id);if(!div)return;
+  div.style.transition=`all ${d.tweenTime}s cubic-bezier(0.34,1.56,0.64,1)`;
+  const ox=d.x,oy=d.y,ow=d.w,oh=d.h,oop=1-d.transparency;
+  switch(type){
+    case'Fade In':div.style.opacity='0';setTimeout(()=>div.style.opacity=String(oop),50);break;
+    case'Fade Out':div.style.opacity=String(oop);setTimeout(()=>{div.style.opacity='0';setTimeout(()=>div.style.opacity=String(oop),400);},50);break;
+    case'Slide In L':div.style.transform='translateX(-80px)';setTimeout(()=>div.style.transform='translateX(0)',50);break;
+    case'Slide In R':div.style.transform='translateX(80px)';setTimeout(()=>div.style.transform='translateX(0)',50);break;
+    case'Slide Up':div.style.transform='translateY(60px)';setTimeout(()=>div.style.transform='translateY(0)',50);break;
+    case'Scale Up':div.style.transform='scale(0.6)';div.style.opacity='0';setTimeout(()=>{div.style.transform='scale(1)';div.style.opacity=String(oop);},50);break;
+    case'Bounce':div.style.transform='scale(1.15)';setTimeout(()=>{div.style.transform='scale(1)';},200);break;
+    case'Spin In':div.style.transform='rotate(-180deg) scale(0)';setTimeout(()=>div.style.transform='rotate(0) scale(1)',50);break;
+    case'Shake':
+      [0,50,100,150,200,250].forEach((t,i)=>setTimeout(()=>div.style.transform=i%2?'translateX(6px)':'translateX(-6px)',t));
+      setTimeout(()=>div.style.transform='translateX(0)',300);break;
+    case'Pulse':
+      div.style.transform='scale(1.08)';div.style.filter=`brightness(1.3)`;
+      setTimeout(()=>{div.style.transform='scale(1)';div.style.filter='';},300);break;
+    case'Elastic':div.style.transform='scale(0)';div.style.transition=`all ${d.tweenTime}s cubic-bezier(0.68,-0.55,0.265,1.55)`;setTimeout(()=>div.style.transform='scale(1)',50);break;
+    case'Flip':div.style.transform='rotateY(90deg)';setTimeout(()=>div.style.transform='rotateY(0deg)',50);break;
+  }
+  setTimeout(()=>{div.style.transition='';div.style.transform='';},d.tweenTime*1000+200);
+  toast(`▶ ${type} preview`,'ok');
+}
+
+// ═══════════════════════════════════════════════════════
+// DELETE / DUPE
+// ═══════════════════════════════════════════════════════
+function delSel(){
+  if(!selIds.size)return;
+  selIds.forEach(id=>{document.getElementById(id)?.remove();delete els[id];});
+  selIds.clear();updProps();updLayers();genCode();pushHist('Delete');toast('Deleted','ok');
+}
+function dupeSel(){
+  if(!selIds.size)return;
+  const newIds=[];
+  [...selIds].forEach(id=>{
+    const d=els[id];if(!d)return;
+    const nid=addEl(d.type,{...JSON.parse(JSON.stringify(d)),x:d.x+20,y:d.y+20,name:d.name+'_copy',id:undefined,_nosound:true});
+    newIds.push(nid);
+  });
+  clearSel();newIds.forEach(id=>selEl(id,true));
+  pushHist('Duplicate');toast('Duplicated','ok');
+}
+
+// ═══════════════════════════════════════════════════════
+// ALIGNMENT
+// ═══════════════════════════════════════════════════════
+function aln(type){
+  const ids=[...selIds];if(!ids.length)return;
+  switch(type){
+    case'l':{const mx=Math.min(...ids.map(i=>els[i].x));ids.forEach(i=>{els[i].x=mx;rfEl(i);});break;}
+    case'r':{const mx=Math.max(...ids.map(i=>els[i].x+els[i].w));ids.forEach(i=>{els[i].x=mx-els[i].w;rfEl(i);});break;}
+    case't':{const my=Math.min(...ids.map(i=>els[i].y));ids.forEach(i=>{els[i].y=my;rfEl(i);});break;}
+    case'b':{const my=Math.max(...ids.map(i=>els[i].y+els[i].h));ids.forEach(i=>{els[i].y=my-els[i].h;rfEl(i);});break;}
+    case'ch':{
+      if(ids.length===1){els[ids[0]].x=Math.round((SW-els[ids[0]].w)/2);}
+      else{const cx=(Math.min(...ids.map(i=>els[i].x))+Math.max(...ids.map(i=>els[i].x+els[i].w)))/2;ids.forEach(i=>{els[i].x=Math.round(cx-els[i].w/2);});}
+      ids.forEach(i=>rfEl(i));break;
+    }
+    case'cv':{
+      if(ids.length===1){els[ids[0]].y=Math.round((SH-els[ids[0]].h)/2);}
+      else{const cy=(Math.min(...ids.map(i=>els[i].y))+Math.max(...ids.map(i=>els[i].y+els[i].h)))/2;ids.forEach(i=>{els[i].y=Math.round(cy-els[i].h/2);});}
+      ids.forEach(i=>rfEl(i));break;
+    }
+  }
+  genCode();pushHist('Align');
+}
+function distH(){
+  const ids=[...selIds].sort((a,b)=>els[a].x-els[b].x);if(ids.length<3)return;
+  const total=ids.reduce((s,i)=>s+els[i].w,0);
+  const gap=(els[ids[ids.length-1]].x+els[ids[ids.length-1]].w-els[ids[0]].x-total)/(ids.length-1);
+  let cx=els[ids[0]].x+els[ids[0]].w;
+  for(let i=1;i<ids.length-1;i++){els[ids[i]].x=cx+gap;cx=els[ids[i]].x+els[ids[i]].w;rfEl(ids[i]);}
+  genCode();pushHist('Distribute H');
+}
+function distV(){
+  const ids=[...selIds].sort((a,b)=>els[a].y-els[b].y);if(ids.length<3)return;
+  const total=ids.reduce((s,i)=>s+els[i].h,0);
+  const gap=(els[ids[ids.length-1]].y+els[ids[ids.length-1]].h-els[ids[0]].y-total)/(ids.length-1);
+  let cy=els[ids[0]].y+els[ids[0]].h;
+  for(let i=1;i<ids.length-1;i++){els[ids[i]].y=cy+gap;cy=els[ids[i]].y+els[ids[i]].h;rfEl(ids[i]);}
+  genCode();pushHist('Distribute V');
+}
+function bringFront(){const d=getFirstSel();if(!d)return;d.zIndex=Math.max(...Object.values(els).map(e=>e.zIndex))+1;rfEl(d.id);genCode();}
+function sendBack(){const d=getFirstSel();if(!d)return;d.zIndex=Math.max(1,Math.min(...Object.values(els).map(e=>e.zIndex))-1);rfEl(d.id);genCode();}
+function grpSel(){toast(`Group: ${selIds.size} elements (exported as nested Frame in Lua)`,'ok');}
+
+// ═══════════════════════════════════════════════════════
+// PAN & ZOOM
+// ═══════════════════════════════════════════════════════
+function updTx(){cvs.style.transform=`translate(${panX}px,${panY}px) scale(${zoom})`;document.getElementById('zdsp').textContent=Math.round(zoom*100)+'%';}
+function zIn(){zoom=Math.min(4,zoom*1.2);updTx();}
+function zOut(){zoom=Math.max(0.08,zoom/1.2);updTx();}
+function zFit(){
+  const r=cw.getBoundingClientRect();
+  zoom=Math.min((r.width-60)/SW,(r.height-60)/SH)*0.88;
+  panX=(r.width-SW*zoom)/2;panY=(r.height-SH*zoom)/2;updTx();
+}
+cw.addEventListener('wheel',e=>{
+  e.preventDefault();
+  const r=cw.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top,oz=zoom;
+  zoom=e.deltaY<0?Math.min(4,zoom*1.1):Math.max(0.08,zoom/1.1);
+  panX=mx-(mx-panX)*(zoom/oz);panY=my-(my-panY)*(zoom/oz);updTx();
+},{passive:false});
+
+function setupPan(){
+  cw.addEventListener('mousedown',e=>{
+    if(curTool==='pan'||e.button===1||e.altKey){
+      isDraggingCanvas=true;panSX=e.clientX;panSY=e.clientY;panSPX=panX;panSPY=panY;
+      cw.style.cursor='grabbing';e.preventDefault();
+    }
+  });
+  document.addEventListener('mousemove',e=>{if(isDraggingCanvas){panX=panSPX+(e.clientX-panSX);panY=panSPY+(e.clientY-panSY);updTx();}});
+  document.addEventListener('mouseup',()=>{if(isDraggingCanvas){isDraggingCanvas=false;cw.style.cursor=curTool==='pan'?'grab':'';}});
+}
+
+function setupBoxSel(){
+  const box=document.getElementById('selbox');
+  screen.addEventListener('mousedown',e=>{
+    if(curTool!=='sel'||e.target!==screen)return;
+    isBoxSel=true;
+    const r=screen.getBoundingClientRect();
+    boxSX=(e.clientX-r.left)/zoom;boxSY=(e.clientY-r.top)/zoom;
+    box.style.display='block';box.style.left=boxSX+'px';box.style.top=boxSY+'px';
+    box.style.width='0';box.style.height='0';
+    if(!e.shiftKey)clearSel();
+  });
+  document.addEventListener('mousemove',e=>{
+    if(!isBoxSel)return;
+    const r=screen.getBoundingClientRect();
+    const cx=(e.clientX-r.left)/zoom,cy=(e.clientY-r.top)/zoom;
+    const x=Math.min(cx,boxSX),y=Math.min(cy,boxSY);
+    box.style.left=x+'px';box.style.top=y+'px';
+    box.style.width=Math.abs(cx-boxSX)+'px';box.style.height=Math.abs(cy-boxSY)+'px';
+  });
+  document.addEventListener('mouseup',()=>{
+    if(!isBoxSel)return;isBoxSel=false;box.style.display='none';
+    const bx=parseFloat(box.style.left),by=parseFloat(box.style.top),bw=parseFloat(box.style.width),bh=parseFloat(box.style.height);
+    if(bw>5&&bh>5)Object.values(els).forEach(el=>{if(el.x>=bx&&el.y>=by&&el.x+el.w<=bx+bw&&el.y+el.h<=by+bh){selIds.add(el.id);document.getElementById(el.id)?.classList.add('sel');document.getElementById(el.id)?.querySelectorAll('.hndl').forEach(h=>h.style.display='block');}});
+    updProps();updStatus();
+  });
+}
+
+function setTool(t){
+  curTool=t;
+  document.getElementById('tb-sel')?.classList.toggle('on',t==='sel');
+  document.getElementById('tb-pan')?.classList.toggle('on',t==='pan');
+  cw.style.cursor=t==='pan'?'grab':'';
+}
+function togGrid(){gridOn=!gridOn;cw.style.backgroundImage=gridOn?'radial-gradient(circle,var(--b1) 1px,transparent 1px)':'none';document.getElementById('tb-grid').classList.toggle('on',gridOn);}
+function togSnap(){snapOn=!snapOn;document.getElementById('tb-snap').classList.toggle('on',snapOn);toast(`Snap ${snapOn?'ON':'OFF'}`,snapOn?'ok':'warn');}
+
+// ═══════════════════════════════════════════════════════
+// HISTORY (UNDO/REDO)
+// ═══════════════════════════════════════════════════════
+function pushHist(lbl){
+  const snap=JSON.stringify(els);
+  if(histIdx<histStack.length-1)histStack=histStack.slice(0,histIdx+1);
+  histStack.push({lbl,snap,t:Date.now()});
+  if(histStack.length>60)histStack.shift();
+  histIdx=histStack.length-1;
+}
+function undo(){if(histIdx<=0)return;histIdx--;restoreSnap();toast('Undo','ok');}
+function redo(){if(histIdx>=histStack.length-1)return;histIdx++;restoreSnap();toast('Redo','ok');}
+function restoreSnap(){
+  const snap=histStack[histIdx]?.snap;if(!snap)return;
+  Object.keys(els).forEach(id=>document.getElementById(id)?.remove());
+  els=JSON.parse(snap);
+  Object.values(els).forEach(d=>{
+    const div=document.createElement('div');div.id=d.id;div.className='gel';
+    div.innerHTML=buildGelHTML(d.id);screen.appendChild(div);
+    setupElInteract(div,d.id);rfEl(d.id);
+  });
+  clearSel();updLayers();genCode();
+}
+
+// ═══════════════════════════════════════════════════════
+// PROJECT MANAGEMENT
+// ═══════════════════════════════════════════════════════
+function newProj(){if(!confirm('Start a new project? Unsaved work will be lost.'))return;Object.keys(els).forEach(id=>document.getElementById(id)?.remove());els={};selIds.clear();ctr=0;updLayers();updProps();genCode();toast('New project','ok');}
+function saveProj(){
+  const blob=new Blob([JSON.stringify({els,ctr,globalVars},null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='robloxforge_project.json';a.click();toast('Saved!','ok');
+}
+function loadProj(){
+  const inp=document.createElement('input');inp.type='file';inp.accept='.json';
+  inp.onchange=e=>{
+    const f=e.target.files[0];if(!f)return;
+    const r=new FileReader();
+    r.onload=ev=>{try{
+      const data=JSON.parse(ev.target.result);
+      Object.keys(els).forEach(id=>document.getElementById(id)?.remove());
+      els=data.els||{};ctr=data.ctr||0;globalVars=data.globalVars||globalVars;
+      Object.values(els).forEach(d=>{
+        const div=document.createElement('div');div.id=d.id;div.className='gel';
+        div.innerHTML=buildGelHTML(d.id);screen.appendChild(div);
+        setupElInteract(div,d.id);rfEl(d.id);
+      });
+      clearSel();updLayers();genCode();toast('Loaded!','ok');
+    }catch(err){toast('Invalid project file','err');}};
+    r.readAsText(f);
+  };inp.click();
+}
+
+// ═══════════════════════════════════════════════════════
+// CODE GENERATION
+// ═══════════════════════════════════════════════════════
+function genCode(){
+  const at=document.querySelector('.bttab.on')?.textContent;
+  if(at==='JSON'){document.getElementById('lua-out').value=JSON.stringify(els,null,2);return;}
+  if(at==='History'){renderHistCode();return;}
+  if(at==='Visual Nodes')return;
+  genLua();
+}
+
+function h2c(hex){
+  if(!hex||hex==='transparent')return null;
+  if(hex.startsWith('rgba')){const m=hex.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);if(m)hex='#'+[m[1],m[2],m[3]].map(n=>(+n).toString(16).padStart(2,'0')).join('');}
+  if(!hex.startsWith('#'))return null;
+  if(hex.length===4)hex='#'+hex[1]+hex[1]+hex[2]+hex[2]+hex[3]+hex[3];
+  const r=parseInt(hex.substr(1,2),16)/255,g=parseInt(hex.substr(3,2),16)/255,b=parseInt(hex.substr(5,2),16)/255;
+  return`Color3.new(${r.toFixed(3)}, ${g.toFixed(3)}, ${b.toFixed(3)})`;
+}
+
+function genLua(){
+  let lua=`-- ╔══════════════════════════════════════════════╗\n`;
+  lua+=`-- ║  RobloxForge PRO v2  |  Generated Script    ║\n`;
+  lua+=`-- ╚══════════════════════════════════════════════╝\n\n`;
+  lua+=`-- Global Variables\n`;
+  Object.entries(globalVars).forEach(([k,v])=>{
+    if(k.toLowerCase().includes('color'))lua+=`local ${k} = ${h2c(v)||`"${v}"`}\n`;
+    else lua+=`local ${k} = ${isNaN(v)?`"${v}"`:v}\n`;
+  });
+  lua+=`\nlocal Players = game:GetService("Players")\n`;
+  lua+=`local TweenService = game:GetService("TweenService")\n`;
+  lua+=`local SoundService = game:GetService("SoundService")\n`;
+  lua+=`local LocalPlayer = Players.LocalPlayer\n`;
+  lua+=`local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")\n\n`;
+  lua+=`local ScreenGui = Instance.new("ScreenGui")\n`;
+  lua+=`ScreenGui.Name = "RobloxForgeUI"\n`;
+  lua+=`ScreenGui.ResetOnSpawn = false\n`;
+  lua+=`ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling\n`;
+  lua+=`ScreenGui.Parent = PlayerGui\n\n`;
+
+  const typeMap={ScrollFrame:'ScrollingFrame',Viewport:'ViewportFrame',Canvas:'CanvasGroup',Toggle:'Frame',Slider:'Frame',ProgressBar:'Frame',Dropdown:'Frame',Checkbox:'Frame',RadioBtn:'Frame',Badge:'Frame',Separator:'Frame',Tooltip:'Frame',Notification:'Frame'};
+
+  Object.values(els).forEach(el=>{
+    const vn=el.id;
+    const rbxType=typeMap[el.type]||el.type;
+    lua+=`-- ── ${el.name} (${el.type}) ──\n`;
+    lua+=`local ${vn} = Instance.new("${rbxType}")\n`;
+    lua+=`${vn}.Name = "${el.name}"\n`;
+    const sm=el.scaleMode||'Offset';
+    if(sm==='Scale'){
+      lua+=`${vn}.Size = UDim2.new(${(el.w/SW).toFixed(4)}, 0, ${(el.h/SH).toFixed(4)}, 0)\n`;
+      lua+=`${vn}.Position = UDim2.new(${(el.x/SW).toFixed(4)}, 0, ${(el.y/SH).toFixed(4)}, 0)\n`;
+    }else{
+      lua+=`${vn}.Size = UDim2.new(0, ${Math.round(el.w)}, 0, ${Math.round(el.h)})\n`;
+      lua+=`${vn}.Position = UDim2.new(0, ${Math.round(el.x)}, 0, ${Math.round(el.y)})\n`;
+    }
+    if(el.anchorX||el.anchorY)lua+=`${vn}.AnchorPoint = Vector2.new(${el.anchorX||0}, ${el.anchorY||0})\n`;
+    lua+=`${vn}.ZIndex = ${el.zIndex}\n`;
+    lua+=`${vn}.Visible = ${el.visible}\n`;
+    const bgc=h2c(el.bg);
+    if(bgc)lua+=`${vn}.BackgroundColor3 = ${bgc}\n`;
+    else lua+=`${vn}.BackgroundTransparency = 1\n`;
+    if(el.transparency>0)lua+=`${vn}.BackgroundTransparency = ${el.transparency.toFixed(2)}\n`;
+    if(el.rounding>0){lua+=`local ${vn}_c=Instance.new("UICorner",${vn})\n${vn}_c.CornerRadius=UDim.new(0,${el.rounding})\n`;}
+    if(el.strokeThick>0){const sc=h2c(el.strokeColor);lua+=`local ${vn}_s=Instance.new("UIStroke",${vn})\n${sc?`${vn}_s.Color=${sc}\n`:''}${vn}_s.Thickness=${el.strokeThick}\n`;}
+    if(el.gradient){
+      const c1=h2c(el.gradC1),c2=h2c(el.gradC2);
+      if(c1&&c2)lua+=`local ${vn}_g=Instance.new("UIGradient",${vn})\n${vn}_g.Color=ColorSequence.new(${c1},${c2})\n${vn}_g.Rotation=${el.gradDir==='h'?0:90}\n`;
+    }
+    if(['TextLabel','TextButton','TextBox'].includes(el.type)&&el.text!==undefined){
+      lua+=`${vn}.Text = "${el.text.replace(/"/g,'\\"')}"\n`;
+      lua+=`${vn}.TextSize = ${el.textSize}\n`;
+      const tc=h2c(el.textColor);if(tc)lua+=`${vn}.TextColor3 = ${tc}\n`;
+      lua+=`${vn}.Font = Enum.Font.${el.fontFamily}\n`;
+      lua+=`${vn}.TextXAlignment = Enum.TextXAlignment.${el.textAlign}\n`;
+      lua+=`${vn}.BackgroundTransparency = ${el.bg==='transparent'?1:el.transparency}\n`;
+    }
+    if(el.type==='ImageLabel'||el.type==='ImageButton'){lua+=`${vn}.Image = "${el.imageId}"\n${vn}.ScaleType = Enum.ScaleType.Stretch\n`;}
+    // Tween
+    if(el.scriptEnabled&&el.tweenStyle){
+      lua+=`-- TweenService for ${el.name}\n`;
+      lua+=`local ${vn}_ti = TweenInfo.new(${el.tweenTime}, Enum.EasingStyle.${el.tweenStyle}, Enum.EasingDirection.${el.tweenDir})\n`;
+    }
+    // Sound
+    if(el.soundClick){lua+=`local ${vn}_snd=Instance.new("Sound",${vn})\n${vn}_snd.SoundId="${el.soundClick}"\n`;}
+    // Script
+    if(el.scriptEnabled&&el.script){
+      lua+=`-- Script: ${el.name}\n`;
+      lua+=el.script.split('\n').map(l=>`-- SCRIPT: ${l}`).join('\n')+'\n';
+      lua+=`-- (Paste the above script into a LocalScript under ${el.name})\n`;
+    }
+    // Toggle behavior
+    if(el.type==='Toggle'){
+      lua+=`local ${vn}_toggled = ${el.toggleState}\n`;
+      lua+=`${vn}.MouseButton1Click:Connect(function()\n    ${vn}_toggled = not ${vn}_toggled\nend)\n`;
+    }
+    lua+=`${vn}.Parent = ScreenGui\n\n`;
+  });
+  document.getElementById('lua-out').value=lua;
+}
+
+function renderHistCode(){
+  document.getElementById('lua-out').value=histStack.map((h,i)=>`${i===histIdx?'>> ':'   '}[${i+1}] ${h.lbl}  —  ${new Date(h.t).toLocaleTimeString()}`).join('\n')||'-- No history';
+}
+function copyLua(){navigator.clipboard.writeText(document.getElementById('lua-out').value);toast('Copied!','ok');}
+function exportLua(){
+  genLua();
+  const blob=new Blob([document.getElementById('lua-out').value],{type:'text/plain'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='RobloxForgeUI.lua';a.click();toast('Exported!','ok');
+}
+
+function bTab(t,el){
+  activeBtTab=t;
+  document.querySelectorAll('.bttab').forEach(x=>x.classList.remove('on'));el.classList.add('on');
+  const la=document.getElementById('lua-out');
+  const na=document.getElementById('node-area');
+  if(t==='nodes'){la.style.display='none';na.style.display='block';}
+  else{la.style.display='';na.style.display='none';genCode();}
+}
+
+// ═══════════════════════════════════════════════════════
+// VISUAL NODE EDITOR
+// ═══════════════════════════════════════════════════════
+function openNodesPanel(){
+  document.getElementById('bp').style.height='340px';
+  const btn=document.querySelector('[onclick="bTab(\'nodes\',this)"]')||document.getElementById('node-tab-btn');
+  bTab('nodes',btn||{classList:{add:()=>{},remove:()=>{}}});
+  if(!Object.keys(nodes).length)buildDefaultNodes();
+}
+function openNodesPanel(){
+  document.getElementById('bp').style.height='340px';
+  activeBtTab='nodes';
+  document.querySelectorAll('.bttab').forEach(x=>x.classList.remove('on'));
+  document.getElementById('node-tab-btn').classList.add('on');
+  document.getElementById('lua-out').style.display='none';
+  document.getElementById('node-area').style.display='block';
+  if(!Object.keys(nodes).length)buildDefaultNodes();
+}
+
+const NODE_TYPES={
+  event:{label:'🎯 Event',color:'#ff6b35',ports:{out:['Trigger']}},
+  action:{label:'⚡ Action',color:'#7c6bff',ports:{in:['Execute'],out:['Done']}},
+  condition:{label:'❓ If/Else',color:'#ffd23f',ports:{in:['Check'],out:['True','False']}},
+  tween:{label:'🎬 Tween',color:'#00d4ff',ports:{in:['Play'],out:['On Complete']}},
+  sound:{label:'🔊 Sound',color:'#00e5a0',ports:{in:['Play'],out:['Done']}},
+  variable:{label:'📦 Variable',color:'#a594ff',ports:{out:['Value']}},
+  delay:{label:'⏱ Delay',color:'#ff4d6d',ports:{in:['Start'],out:['After']}},
+  print:{label:'🖨 Print',color:'#888',ports:{in:['Message']}},
+};
+
+let nodeDragId=null,nodeDragOX=0,nodeDragOY=0;
+let portConnStart=null;
+
+function buildDefaultNodes(){
+  addNode('event',80,30,{event:'MouseButton1Click',element:'Button_1'});
+  addNode('tween',300,30,{style:'Back',dir:'Out',time:0.4});
+  addNode('sound',300,130,{soundId:'rbxassetid://6895079853'});
+  addNode('action',520,30,{action:'Hide Frame',target:'Frame_1'});
+  drawConnections();
+}
+
+function addNode(type,x,y,data={}){
+  nodeCtr++;
+  const id=`nd_${nodeCtr}`;
+  nodes[id]={id,type,x,y,data,connections:[]};
+  renderNode(id);
+  return id;
+}
+
+function renderNode(id){
+  const n=nodes[id];const t=NODE_TYPES[n.type];
+  const div=document.createElement('div');div.id=id;div.className='node';
+  div.style.left=n.x+'px';div.style.top=n.y+'px';
+  div.innerHTML=`
+    <div class="node-head" style="background:${t.color}22;border-bottom:1px solid ${t.color}44;">
+      <span style="font-size:13px;">${t.label}</span>
+      <button class="del-node" onclick="delNode('${id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="node-body">
+      ${renderNodeData(n)}
+      ${(t.ports?.in||[]).map(p=>`<div class="node-port in"><div class="port-dot" style="color:${t.color}" data-node="${id}" data-port="${p}" data-dir="in"></div><span class="port-label">${p}</span></div>`).join('')}
+      ${(t.ports?.out||[]).map(p=>`<div class="node-port out"><span class="port-label">${p}</span><div class="port-dot" style="color:${t.color}" data-node="${id}" data-port="${p}" data-dir="out"></div></div>`).join('')}
+    </div>`;
+  document.getElementById('node-area').appendChild(div);
+  setupNodeDrag(div,id);
+  setupPortDrag(div,id);
+}
+
+function renderNodeData(n){
+  switch(n.type){
+    case'event':return`<div style="margin-bottom:5px;"><select style="width:100%;font-size:10px;padding:3px;background:var(--s4);border:1px solid var(--b2);color:var(--txt);border-radius:4px;"><option>MouseButton1Click</option><option>MouseEnter</option><option>MouseLeave</option></select></div>`;
+    case'tween':return`<div style="font-size:9.5px;color:var(--txt3);margin-bottom:4px;">Style: ${n.data.style||'Back'} ${n.data.dir||'Out'} | ${n.data.time||0.4}s</div>`;
+    case'sound':return`<div style="font-size:9px;color:var(--acc2);font-family:'JetBrains Mono',monospace;">${(n.data.soundId||'').substring(0,20)}</div>`;
+    case'delay':return`<div style="margin-bottom:4px;"><input type="number" value="${n.data.time||1}" style="width:100%;font-size:10px;padding:3px;" placeholder="Seconds"></div>`;
+    case'variable':return`<div style="margin-bottom:4px;"><input type="text" value="${n.data.name||'myVar'}" style="width:100%;font-size:10px;padding:3px;" placeholder="Name"></div>`;
+    case'action':return`<div style="margin-bottom:4px;"><select style="width:100%;font-size:10px;padding:3px;background:var(--s4);border:1px solid var(--b2);color:var(--txt);border-radius:4px;"><option>Show Frame</option><option>Hide Frame</option><option>Destroy</option><option>Set Property</option></select></div>`;
+    default:return'';
+  }
+}
+
+function setupNodeDrag(div,id){
+  div.querySelector('.node-head').addEventListener('mousedown',e=>{
+    if(e.target.classList.contains('del-node')||e.target.closest('.del-node'))return;
+    nodeDragId=id;
+    const r=document.getElementById('node-area').getBoundingClientRect();
+    nodeDragOX=e.clientX-r.left-nodes[id].x;
+    nodeDragOY=e.clientY-r.top-nodes[id].y;
+    e.preventDefault();
+  });
+}
+function setupPortDrag(div,id){
+  div.querySelectorAll('.port-dot').forEach(dot=>{
+    dot.addEventListener('mousedown',e=>{
+      e.stopPropagation();
+      if(dot.dataset.dir==='out'){
+        portConnStart={nodeId:id,port:dot.dataset.port,el:dot};
+        dot.classList.add('connected');
+      }
+    });
+    dot.addEventListener('mouseup',e=>{
+      if(portConnStart&&dot.dataset.dir==='in'&&portConnStart.nodeId!==id){
+        nodeConns.push({from:portConnStart.nodeId,fromPort:portConnStart.port,to:id,toPort:dot.dataset.port});
+        dot.classList.add('connected');
+        drawConnections();
+        toast('Connected!','ok');
+      }
+      portConnStart=null;
+      document.getElementById('node-svg').innerHTML='';
+    });
+  });
+}
+document.addEventListener('mousemove',e=>{
+  if(nodeDragId){
+    const r=document.getElementById('node-area').getBoundingClientRect();
+    nodes[nodeDragId].x=e.clientX-r.left-nodeDragOX;
+    nodes[nodeDragId].y=e.clientY-r.top-nodeDragOY;
+    document.getElementById(nodeDragId).style.left=nodes[nodeDragId].x+'px';
+    document.getElementById(nodeDragId).style.top=nodes[nodeDragId].y+'px';
+    drawConnections();
+  }
+});
+document.addEventListener('mouseup',()=>{nodeDragId=null;portConnStart=null;});
+
+function drawConnections(){
+  const svg=document.getElementById('node-svg');
+  svg.innerHTML='';
+  nodeConns.forEach(conn=>{
+    const fn=document.getElementById(conn.from);
+    const tn=document.getElementById(conn.to);
+    if(!fn||!tn)return;
+    const fr=fn.getBoundingClientRect();
+    const tr=tn.getBoundingClientRect();
+    const ar=document.getElementById('node-area').getBoundingClientRect();
+    const x1=fr.right-ar.left,y1=(fr.top+fr.bottom)/2-ar.top;
+    const x2=tr.left-ar.left,y2=(tr.top+tr.bottom)/2-ar.top;
+    const cx=(x1+x2)/2;
+    const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d',`M ${x1} ${y1} C ${cx} ${y1}, ${cx} ${y2}, ${x2} ${y2}`);
+    path.setAttribute('stroke','rgba(124,107,255,0.7)');
+    path.setAttribute('stroke-width','2');
+    path.setAttribute('fill','none');
+    path.setAttribute('stroke-dasharray','4 2');
+    svg.appendChild(path);
+  });
+}
+function delNode(id){
+  document.getElementById(id)?.remove();
+  delete nodes[id];
+  nodeConns=nodeConns.filter(c=>c.from!==id&&c.to!==id);
+  drawConnections();
+}
+
+// ═══════════════════════════════════════════════════════
+// SCRIPT MODAL
+// ═══════════════════════════════════════════════════════
+function openScriptMdlFor(id){
+  activeScriptEl=id;const d=els[id];if(!d)return;
+  document.getElementById('scr-el-nm').textContent=`-- ${d.name} (${d.type})`;
+  document.getElementById('scr-in').value=d.script||'';
+  document.getElementById('scr-ov').classList.add('on');
+}
+function openScriptMdl(){const d=getFirstSel();if(d)openScriptMdlFor(d.id);}
+function saveScript(){
+  if(!activeScriptEl||!els[activeScriptEl])return;
+  els[activeScriptEl].script=document.getElementById('scr-in').value;
+  els[activeScriptEl].scriptEnabled=true;
+  rfEl(activeScriptEl);updProps();genCode();
+  closeOv('scr-ov');toast('Script saved!','ok');
+}
+function openImgMdl(){document.getElementById('img-ov').classList.add('on');}
+function handleImgUpload(e){
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    document.getElementById('img-pimg').src=ev.target.result;
+    document.getElementById('img-prev').style.display='block';
+    document.getElementById('img-ov').dataset.imgData=ev.target.result;
+  };r.readAsDataURL(f);
+}
+function applyImg(){
+  const d=getFirstSel();if(!d)return;
+  const aid=document.getElementById('img-aid').value;
+  const idata=document.getElementById('img-ov').dataset.imgData;
+  if(idata){d.imageData=idata;d.imageId='rbxassetid://custom';}
+  else if(aid){d.imageId=aid;d.imageData=null;}
+  rfEl(d.id);genCode();closeOv('img-ov');toast('Image applied!','ok');
+}
+
+// ═══════════════════════════════════════════════════════
+// GLOBAL VARIABLES
+// ═══════════════════════════════════════════════════════
+function openGlobals(){
+  renderGVList();document.getElementById('glb-ov').classList.add('on');
+}
+function renderGVList(){
+  const el=document.getElementById('gv-list');
+  el.innerHTML=Object.entries(globalVars).map(([k,v])=>`
+    <div class="gv-row">
+      <input type="text" value="${k}" style="width:100px;" onchange="renameGV('${k}',this.value)">
+      <input type="text" value="${v}" onchange="updateGV('${k}',this.value)">
+      <button class="gv-del" onclick="delGV('${k}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>`).join('');
+}
+function addGV(){globalVars[`var_${Date.now()}`]='value';renderGVList();}
+function renameGV(old,nw){const v=globalVars[old];delete globalVars[old];globalVars[nw]=v;}
+function updateGV(k,v){globalVars[k]=v;}
+function delGV(k){delete globalVars[k];renderGVList();}
+function applyGlobals(){closeOv('glb-ov');genCode();toast('Globals applied!','ok');}
+
+// ═══════════════════════════════════════════════════════
+// CONTEXT MENU
+// ═══════════════════════════════════════════════════════
+function ctxMenu(e){e.preventDefault();const ctx=document.getElementById('ctx');ctx.style.left=e.clientX+'px';ctx.style.top=e.clientY+'px';ctx.style.display='block';}
+document.addEventListener('click',()=>document.getElementById('ctx').style.display='none');
+
+// ═══════════════════════════════════════════════════════
+// LEFT & BOTTOM TAB SWITCHING
+// ═══════════════════════════════════════════════════════
+function lTab(t,el){
+  document.querySelectorAll('#lp .ptab').forEach(x=>x.classList.remove('on'));el.classList.add('on');
+  document.getElementById('lt-elements').classList.toggle('hide',t!=='elements');
+  document.getElementById('lt-layers').classList.toggle('hide',t!=='layers');
+  document.getElementById('lt-presets').classList.toggle('hide',t!=='presets');
+}
+
+// ═══════════════════════════════════════════════════════
+// MODALS
+// ═══════════════════════════════════════════════════════
+function closeOv(id){document.getElementById(id).classList.remove('on');}
+document.querySelectorAll('.ov').forEach(ov=>ov.addEventListener('click',e=>{if(e.target===ov)ov.classList.remove('on');}));
+
+// ═══════════════════════════════════════════════════════
+// KEYBOARD
+// ═══════════════════════════════════════════════════════
+function onKey(e){
+  if(['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName))return;
+  if(e.key==='Delete'||e.key==='Backspace')delSel();
+  if(e.key==='v'||e.key==='V')setTool('sel');
+  if(e.key==='h'||e.key==='H')setTool('pan');
+  if(e.ctrlKey&&e.key==='z'){e.preventDefault();undo();}
+  if(e.ctrlKey&&e.key==='y'){e.preventDefault();redo();}
+  if(e.ctrlKey&&e.key==='d'){e.preventDefault();dupeSel();}
+  if(e.ctrlKey&&e.key==='a'){e.preventDefault();Object.keys(els).forEach(id=>selEl(id,true));}
+  if(e.ctrlKey&&e.key==='s'){e.preventDefault();saveProj();}
+  if(e.ctrlKey&&e.key==='n'){e.preventDefault();newProj();}
+  if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key)){
+    const step=e.shiftKey?10:1;
+    selIds.forEach(id=>{
+      if(!els[id])return;
+      if(e.key==='ArrowLeft')els[id].x-=step;
+      if(e.key==='ArrowRight')els[id].x+=step;
+      if(e.key==='ArrowUp')els[id].y-=step;
+      if(e.key==='ArrowDown')els[id].y+=step;
+      rfEl(id);
+    });
+    updProps();genCode();e.preventDefault();
+  }
+  if(e.key==='Escape')clearSel();
+}
+
+// ═══════════════════════════════════════════════════════
+// STATUS BAR & MOUSE POS
+// ═══════════════════════════════════════════════════════
+function updStatus(){
+  document.getElementById('sb-el').textContent=`${Object.keys(els).length} elements`;
+  const d=getFirstSel();
+  if(!d)document.getElementById('sb-sz').textContent='';
+  else document.getElementById('sb-sz').textContent=`${d.name} · ${Math.round(d.w)}×${Math.round(d.h)} @ ${Math.round(d.x)},${Math.round(d.y)}`;
+}
+function onMouseMove(e){
+  const r=screen.getBoundingClientRect();
+  const x=Math.round((e.clientX-r.left)/zoom),y=Math.round((e.clientY-r.top)/zoom);
+  document.getElementById('sb-pos').textContent=`X: ${x}  Y: ${y}`;
+}
+
+// ═══════════════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════════════
+let toastT;
+function toast(msg,type='ok'){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className=`on ${type}`;
+  clearTimeout(toastT);toastT=setTimeout(()=>t.className='',2400);
+}
+
+// ═══════════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════════
+function toHex(c){
+  if(!c||c==='transparent')return'#000000';
+  if(c.startsWith('#'))return c.length===7?c:'#000000';
+  if(c.startsWith('rgba')){const m=c.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);if(m)return'#'+[m[1],m[2],m[3]].map(n=>(+n).toString(16).padStart(2,'0')).join('');}
+  return'#000000';
+}
+
+// ═══════════════════════════════════════════════════════
+// START
+// ═══════════════════════════════════════════════════════
+init();
+</script>
+</body>
+</html>
